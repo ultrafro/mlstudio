@@ -7,6 +7,7 @@ import ReactFlow, {
   Controls,
   MiniMap,
   Background,
+  BackgroundVariant,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -46,7 +47,7 @@ export default function GraphDisplay() {
       >
         <Controls />
         <MiniMap />
-        <Background variant="dots" gap={12} size={1} />
+        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
     </FlexCol>
   );
