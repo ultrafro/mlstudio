@@ -1,5 +1,5 @@
 import { FlexCol, FlexRow, Icon } from "./Flex";
-import { blocks } from "./model";
+import { Blocks, blocks } from "./model";
 
 export default function LeftBar() {
   return (
@@ -44,7 +44,7 @@ export default function LeftBar() {
           justifyContent: "space-around",
         }}
       >
-        {blocks.map((block) => {
+        {Object.values(Blocks).map((block) => {
           return (
             <FlexCol
               key={"block_name_" + block.name}
@@ -63,6 +63,15 @@ export default function LeftBar() {
             </FlexCol>
           );
         })}
+      </FlexRow>
+
+      <FlexRow
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        Validation
       </FlexRow>
     </FlexCol>
   );

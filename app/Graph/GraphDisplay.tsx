@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { FlexCol, FlexRow } from "./Flex";
+import { useCallback, useContext, useEffect } from "react";
+import { FlexCol, FlexRow } from "../Flex";
 import ReactFlow, {
   useEdgesState,
   useNodesState,
@@ -8,9 +8,12 @@ import ReactFlow, {
   MiniMap,
   Background,
   BackgroundVariant,
+  OnNodesChange,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
+import { SessionProivder } from "../Providers";
+import { getNodesFromNetwork, useExistenceHash } from "./GraphHooks";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -19,6 +22,9 @@ const initialNodes = [
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function GraphDisplay() {
+  const session = useContext(SessionProivder);
+  const hash = useExistenceHash();
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -26,6 +32,30 @@ export default function GraphDisplay() {
     (params: any) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const onNodesChangeWrapper: OnNodesChange = (stuff: any) => {
+    // console.log("node changed.");
+    // console.log(stuff);
+
+    //adjust network block positions:
+    const newNetwork = { ...session.session.network };
+    for (const node of stuff) {
+      const block = newNetwork.blocks[node.id];
+      if (node.positionAbsolute) {
+        block.x = node.positionAbsolute.x;
+        block.y = node.positionAbsolute.y;
+      }
+    }
+
+    onNodesChange(stuff);
+    session.setSession({ ...session.session, network: newNetwork });
+  };
+
+  useEffect(() => {
+    const h = hash;
+    const nodes = getNodesFromNetwork(session.session.network);
+    setNodes(nodes);
+  }, [setNodes, hash]);
 
   return (
     <FlexCol
@@ -41,7 +71,7 @@ export default function GraphDisplay() {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
+        onNodesChange={onNodesChangeWrapper}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
       >

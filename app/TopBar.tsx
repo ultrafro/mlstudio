@@ -49,11 +49,13 @@ export default function TopBar(props: { openData: () => void }) {
           margin: "24px",
         }}
       >
-        <Icon src="/icons/settings.png" />
-        <Icon src="/icons/play.png" />
-        <Icon src="/icons/step.png" />
         <Icon src="/icons/trash.png" />
+        <Icon src="/icons/play.png" />
+        <Icon src="/icons/ff.png" />
       </FlexRow>
+
+      {/* Learning Rate settings */}
+      <Icon src="/icons/settings.png" />
 
       {/* Mode */}
       <FlexRow
