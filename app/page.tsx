@@ -7,9 +7,12 @@ import TopBar from "./TopBar";
 import LeftBar from "./LeftBar";
 import GraphDisplay from "./GraphDisplay";
 import { FlexCol, FlexRow } from "./Flex";
+import { useState } from "react";
+import { DataModal } from "./DataModal/DataModal";
 
 export default function Home() {
   const { mode, setMode } = useMode();
+  const [dataOpen, setDataOpen] = useState<boolean>(false);
 
   return (
     <main>
@@ -21,7 +24,11 @@ export default function Home() {
               height: "100%",
             }}
           >
-            <TopBar />
+            <TopBar
+              openData={() => {
+                setDataOpen(true);
+              }}
+            />
             <FlexRow
               style={{
                 width: "100%",
@@ -33,6 +40,14 @@ export default function Home() {
               <GraphDisplay />
             </FlexRow>
           </FlexCol>
+
+          {dataOpen && (
+            <DataModal
+              onClose={() => {
+                setDataOpen(false);
+              }}
+            />
+          )}
         </div>
       </MantineProvider>
     </main>

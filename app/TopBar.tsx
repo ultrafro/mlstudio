@@ -1,6 +1,7 @@
+import { Button } from "@mantine/core";
 import { FlexCol, FlexRow, Icon } from "./Flex";
 
-export default function TopBar() {
+export default function TopBar(props: { openData: () => void }) {
   return (
     <FlexRow
       style={{
@@ -29,7 +30,9 @@ export default function TopBar() {
             padding: "24px",
           }}
         >
-          <Icon src="/icons/db.png" />
+          <Button>
+            <Icon src="/icons/db.png" onClick={props.openData} />
+          </Button>
         </FlexRow>
       </FlexCol>
 
