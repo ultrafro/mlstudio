@@ -21,6 +21,9 @@ export default function Home() {
     return { session, setSession };
   }, [session, setSession]);
 
+  // console.log("session");
+  // console.log(session.network);
+
   return (
     <main>
       <MantineProvider>

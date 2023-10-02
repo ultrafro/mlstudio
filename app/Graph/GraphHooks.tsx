@@ -46,14 +46,23 @@ export function getNodesFromNetwork(network: Network): Node<
       data: { label: definition.name + "-" + block.id },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
-      style: {
-        // background: "#2B6CB0",
-        // color: "white",
-        width: "100px",
-        height: "200px",
-      },
+      type: definition.nodeType,
     });
   }
 
   return result;
+}
+
+export function getConnectionId({
+  source,
+  target,
+  sourceHandle,
+  targetHandle,
+}: {
+  source: string;
+  target: string;
+  sourceHandle: string | null;
+  targetHandle: string | null;
+}) {
+  return source + "_" + sourceHandle + "_" + target + "_" + targetHandle;
 }

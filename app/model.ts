@@ -17,6 +17,7 @@ export type BlockDefinition = {
   name: string;
   icon: string;
   classDef: BlockClass;
+  nodeType: "source" | "target" | "unary" | "binary";
 };
 
 export enum BlockType {
@@ -32,26 +33,31 @@ export const Blocks: Record<BlockType, BlockDefinition> = {
     name: "Data",
     icon: "icons/data.png",
     classDef: BlockClass,
+    nodeType: "source",
   },
   [BlockType.SAMPLE_DATA]: {
     name: "Sample Data",
     icon: "icons/sample_data.png",
     classDef: BlockClass,
+    nodeType: "unary",
   },
   [BlockType.LINEAR]: {
     name: "Linear",
     icon: "icons/linear.png",
     classDef: LinearBlock,
+    nodeType: "unary",
   },
   [BlockType.TANH]: {
     name: "Tanh",
     icon: "icons/tanh.png",
     classDef: BlockClass,
+    nodeType: "unary",
   },
   [BlockType.CROSS_ENTROPY]: {
     name: "Cross Entropy",
     icon: "icons/cross_entropy.png",
     classDef: BlockClass,
+    nodeType: "unary",
   },
 };
 
@@ -69,7 +75,7 @@ export type SupervisedDataShape = {
 
 export type Network = {
   blocks: Record<string, BlockRecord>;
-  connections: Record<string, Connection>;
+  connections: Record<string, BlockConnection>;
 };
 
 export type BlockRecord = {
@@ -81,33 +87,30 @@ export type BlockRecord = {
   params?: Record<string, any>;
 };
 
-export type Node = {
-  blockId: string;
-  output: string;
-};
-
-export type Connection = {
-  src: Node;
-  dest: Node;
+export type BlockConnection = {
+  source: string;
+  sourceHandle: string;
+  target: string;
+  targetHandle: string;
 };
 
 export type StudioSession = {
   network: Network;
-  visualizers: Record<string, Node>;
+  visualizers: Record<string, { blockId: string; handleId: string }>;
   supervisedDataShape: SupervisedDataShape;
 };
 
 export const DEFAULT_SESSION: StudioSession = {
   network: {
     blocks: {
-      "0": {
-        id: "0",
+      "|0|": {
+        id: "|0|",
         type: BlockType.DATA,
         x: 100,
         y: 100,
       },
-      "1": {
-        id: "1",
+      "|1|": {
+        id: "|1|",
         type: BlockType.LINEAR,
         x: 400,
         y: 100,
