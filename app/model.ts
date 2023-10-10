@@ -16,7 +16,7 @@ export const blocks: block[] = [tensorBlock, tensorBlock];
 export type BlockDefinition = {
   name: string;
   icon: string;
-  classDef: BlockClass;
+  classDef: typeof BlockClass;
   nodeType: "source" | "target" | "unary" | "binary";
 };
 
@@ -130,3 +130,5 @@ export const DEFAULT_SESSION: StudioSession = {
     testProportion: 0.1,
   },
 };
+
+export type OptimizerConfig = {};

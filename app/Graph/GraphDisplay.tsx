@@ -29,6 +29,11 @@ import SourceNode from "./SourceNode";
 import TargetNode from "./TargetNode";
 import UnaryNode from "./UnaryNode";
 import BinaryNode from "./BinaryNode";
+import {
+  tensorflowTest,
+  tensorflowTest2,
+  tensorflowTest3,
+} from "../Blocks/ActualBlocks";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -42,6 +47,8 @@ const nodeDefinitions = {
   unary: UnaryNode,
   binary: BinaryNode,
 };
+
+tensorflowTest3();
 
 export default function GraphDisplay() {
   const session = useContext(SessionProivder);
