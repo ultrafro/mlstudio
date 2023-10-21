@@ -7,8 +7,6 @@ export class BlockClass {
 
   grads: Tensor = tf.tensor1d([1]);
 
-  value: Tensor = tf.tensor1d([1]);
-
   constructor(id: string, loadFromStorage: boolean) {
     this.id = id;
     this.loadFromStorage = loadFromStorage;
@@ -16,11 +14,21 @@ export class BlockClass {
 
   async initialize() {}
 
-  forward(inputs: Tensor[]) {}
+  forward(inputs: Tensor[]): Tensor {
+    return inputs[0];
+  }
 
-  saveStepResults(value: Tensor, grads: Tensor) {
-    this.value = value;
+  saveGrad(grads: Tensor) {
     this.grads = grads;
+  }
+
+  //some blocks, like multiply, don't have state
+  getValue(): Tensor | null {
+    return null;
+  }
+
+  getGrads(): Tensor | null {
+    return null;
   }
 
   destroy() {}
