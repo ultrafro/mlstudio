@@ -14,6 +14,7 @@ import ReactFlow, {
   NodeChange,
   OnConnect,
   Connection,
+  Edge,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -29,11 +30,7 @@ import SourceNode from "./SourceNode";
 import TargetNode from "./TargetNode";
 import UnaryNode from "./UnaryNode";
 import BinaryNode from "./BinaryNode";
-import {
-  tensorflowTest,
-  tensorflowTest2,
-  tensorflowTest3,
-} from "../Blocks/ActualBlocks";
+import { tensorflowTest3 } from "../Blocks/ActualBlocks";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -136,13 +133,29 @@ export default function GraphDisplay() {
     onConnect(connection);
 
     session.setSession({ ...session.session, network: newNetwork });
+    console.log("new connection");
+    console.log(newNetwork);
   };
 
   useEffect(() => {
     const h = hash;
     const nodes = getNodesFromNetwork(session.session.network);
     setNodes(nodes);
-  }, [setNodes, hash]);
+
+    //convert network edges to an array of Edge
+    const edges: Edge[] = [];
+    for (const connectionId in session.session.network.connections) {
+      const connection = session.session.network.connections[connectionId];
+      edges.push({
+        id: nanoid(),
+        source: connection.source,
+        sourceHandle: connection.sourceHandle,
+        target: connection.target,
+        targetHandle: connection.targetHandle,
+      });
+    }
+    setEdges(edges);
+  }, [setNodes, setEdges, hash]);
 
   return (
     <FlexCol

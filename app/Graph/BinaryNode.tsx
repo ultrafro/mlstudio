@@ -13,8 +13,18 @@ function BinaryNode(props: NodeProps) {
   return (
     <div style={baseStyle}>
       <Handle type="target" position={Position.Left} id="|in0|" />
-      <Handle type="target" position={Position.Left} id="|in1|" />
-      <Handle type="source" position={Position.Right} id="|out0|" />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="|in1|"
+        style={{ top: 10, background: "#555" }}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="|out0|"
+        style={{ bottom: 10, top: "auto", background: "#555" }}
+      />
       {props.data?.label}
     </div>
   );

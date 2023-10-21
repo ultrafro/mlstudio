@@ -72,6 +72,8 @@ export const tensorflowTest3 = async () => {
 
     optimizer.applyGradients(grads);
 
+    console.log("grads", grads.a.dataSync());
+
     console.log("loss at: " + i + ": " + value.dataSync());
   }
 
