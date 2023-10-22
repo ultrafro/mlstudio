@@ -15,6 +15,7 @@ import ReactFlow, {
   OnConnect,
   Connection,
   Edge,
+  useReactFlow,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -30,7 +31,7 @@ import SourceNode from "./SourceNode";
 import TargetNode from "./TargetNode";
 import UnaryNode from "./UnaryNode";
 import BinaryNode from "./BinaryNode";
-import { tensorflowTest3 } from "../Blocks/ActualBlocks";
+import { ActualBlocks, tensorflowTest3 } from "../Blocks/ActualBlocks";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -45,7 +46,7 @@ const nodeDefinitions = {
   binary: BinaryNode,
 };
 
-tensorflowTest3();
+// tensorflowTest3();
 
 export default function GraphDisplay() {
   const session = useContext(SessionProivder);
@@ -58,6 +59,8 @@ export default function GraphDisplay() {
     (params: any) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+
+  const reactFlowInstance = useReactFlow();
 
   const onNodesChangeWrapper: OnNodesChange = (changes: NodeChange[]) => {
     // console.log("node changed.");
@@ -88,15 +91,48 @@ export default function GraphDisplay() {
   const onEdgesChangeWrapper: OnEdgesChange = (changes: EdgeChange[]) => {
     const newNetwork = { ...session.session.network };
 
+    console.log("edge change!", changes);
+
     for (const change of changes) {
+      if (change.type == "select" && change.selected) {
+        //print the viewable here:
+
+        const id = change.id;
+        const edge = reactFlowInstance.getEdge(change.id);
+
+        const source = edge?.source || "";
+        const sourceHandle = edge?.sourceHandle || "";
+
+        const block = ActualBlocks[source];
+        console.log("viewable:");
+        const resultTensor = block.viewables[sourceHandle];
+        console.log(resultTensor.dataSync());
+      }
+
       if (change.type == "remove") {
         const id = change.id;
+        const edge = reactFlowInstance.getEdge(change.id);
 
-        const parts = id.split("|");
-        const source = "|" + parts[1] + "|";
-        const sourceHandle = "|" + parts[3] + "|";
-        const target = "|" + parts[5] + "|";
-        const targetHandle = "|" + parts[7] + "|";
+        console.log("full edge info:");
+        console.log(edge);
+        const source = edge?.source || "";
+        const sourceHandle = edge?.sourceHandle || "";
+        const target = edge?.target || "";
+        const targetHandle = edge?.targetHandle || "";
+
+        // const parts = id.split("|");
+        // const source = "|" + parts[1] + "|";
+        // const sourceHandle = "|" + parts[3] + "|";
+        // const target = "|" + parts[5] + "|";
+        // const targetHandle = "|" + parts[7] + "|";
+
+        console.log(
+          "got a remove!",
+          source,
+          sourceHandle,
+          target,
+          targetHandle
+        );
 
         const connectionId = getConnectionId({
           source,
@@ -104,6 +140,12 @@ export default function GraphDisplay() {
           target,
           targetHandle,
         });
+        console.log(
+          "deleting connection id: " +
+            connectionId +
+            " from network. is valid? " +
+            !!session.session.network.connections[connectionId]
+        );
         delete newNetwork.connections[connectionId];
       }
     }

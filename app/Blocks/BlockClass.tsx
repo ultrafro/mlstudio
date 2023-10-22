@@ -1,11 +1,16 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor } from "@tensorflow/tfjs";
+import { BlockType } from "../model";
 
 export class BlockClass {
   loadFromStorage: boolean;
   id: string;
 
+  type: BlockType = BlockType.CONSTANT;
+
   grads: Tensor = tf.tensor1d([1]);
+
+  viewables: Record<string, Tensor> = {};
 
   constructor(id: string, loadFromStorage: boolean) {
     this.id = id;
@@ -16,6 +21,12 @@ export class BlockClass {
 
   forward(inputs: Tensor[]): Tensor {
     return inputs[0];
+  }
+
+  getAdditionalOutputs(): Record<string, Tensor> {
+    //return in the form of:
+    // {"|out1|": tf.tensor1d([1]), "|out2|": tf.tensor1d([1])}
+    return {};
   }
 
   saveGrad(grads: Tensor) {

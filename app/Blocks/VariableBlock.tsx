@@ -1,8 +1,11 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
 import { BlockClass } from "./BlockClass";
+import { BlockType } from "../model";
 
 export class VariableBlock extends BlockClass {
+  type = BlockType.VARIABLE;
+
   variable = tf.variable(tf.tensor1d([1]), true, "a");
 
   constructor(id: string) {
@@ -10,6 +13,8 @@ export class VariableBlock extends BlockClass {
   }
 
   forward(inputs: Tensor[]): Tensor {
+    this.viewables["|out0|"] = this.variable.clone();
+
     return this.variable;
   }
 

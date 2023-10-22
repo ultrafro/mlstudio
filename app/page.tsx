@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { DataModal } from "./DataModal/DataModal";
 import { SessionProivder } from "./Providers";
 import { DEFAULT_SESSION, StudioSession } from "./model";
+import { ReactFlowProvider } from "reactflow";
 
 export default function Home() {
   const { mode, setMode } = useMode();
@@ -48,7 +49,9 @@ export default function Home() {
                 }}
               >
                 <LeftBar />
-                <GraphDisplay />
+                <ReactFlowProvider>
+                  <GraphDisplay />
+                </ReactFlowProvider>
               </FlexRow>
             </FlexCol>
 

@@ -1,7 +1,11 @@
 import { Button } from "@mantine/core";
 import { FlexCol, FlexRow, Icon } from "./Flex";
+import { forwardBlocks, initializeBlocks } from "./Blocks/ActualBlocks";
+import { useContext } from "react";
+import { SessionProivder } from "./Providers";
 
 export default function TopBar(props: { openData: () => void }) {
+  const session = useContext(SessionProivder);
   return (
     <FlexRow
       style={{
@@ -64,7 +68,13 @@ export default function TopBar(props: { openData: () => void }) {
           padding: "24px",
         }}
       >
-        <Icon src="/icons/run.png" />
+        <Icon
+          src="/icons/run.png"
+          onClick={async () => {
+            await initializeBlocks(session.session.network);
+            forwardBlocks(session.session.network);
+          }}
+        />
       </FlexRow>
     </FlexRow>
   );
