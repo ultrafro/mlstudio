@@ -5,6 +5,7 @@ import {
   backwardBlocks,
   forwardBlocks,
   initializeBlocks,
+  trainBlocks,
 } from "./Blocks/ActualBlocks";
 import { useContext } from "react";
 import { SessionProivder } from "./Providers";
@@ -77,10 +78,10 @@ export default function TopBar(props: { openData: () => void }) {
           src="/icons/run.png"
           onClick={async () => {
             await initializeBlocks(session.session.network);
-            forwardBlocks(session.session.network);
+            //forwardBlocks(session.session.network);
 
             //todo: make this find the "final loss" block, right now it's hard coded
-            backwardBlocks("|7|", session.session.network, {}, 1);
+            trainBlocks("|7|", session.session.network, {}, 1);
 
             //print the value of the "|2|" block
             const variableBlock = ActualBlocks["|2|"];

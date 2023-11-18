@@ -23,7 +23,7 @@ export class BlockClass {
 
   async initialize() {}
 
-  forward = (inputs: Tensor[]): Tensor => {
+  forward = (inputs: Tensor[], sample?: boolean): Tensor => {
     return inputs[0];
   };
 

@@ -7,7 +7,7 @@ export const ActualBlocks: Record<string, BlockClass> = {};
 type BlockExecution = {
   id: string;
   inputs: string[];
-  func: (inputs: tf.Tensor[]) => tf.Tensor;
+  func: (inputs: tf.Tensor[], sample?: boolean) => tf.Tensor;
 };
 
 export async function initializeBlocks(network: Network, clear?: boolean) {
@@ -241,7 +241,8 @@ function GetBlockExecutions(network: Network): BlockExecution[] {
 function getLossAndIntermediates(
   executions: BlockExecution[],
   overWriteId?: string,
-  overWriteTensor?: tf.Tensor
+  overWriteTensor?: tf.Tensor,
+  sample?: boolean
 ): {
   loss: tf.Tensor;
   intermediates: Record<string, tf.Tensor>;
@@ -256,7 +257,7 @@ function getLossAndIntermediates(
     for (const inputHash of execution.inputs) {
       inputs.push(intermediaryOutputs[inputHash]);
     }
-    const output = execution.func(inputs);
+    const output = execution.func(inputs, sample);
 
     if (blockId == overWriteId) {
       intermediaryOutputs[blockId] = overWriteTensor as any;
@@ -277,7 +278,7 @@ function getLossAndIntermediates(
   return { loss: outputTensor, intermediates: intermediaryOutputs };
 }
 
-export function backwardBlocks(
+export function trainBlocks(
   id: string,
   network: Network,
   optimizerConfig: OptimizerConfig,
@@ -297,7 +298,7 @@ export function backwardBlocks(
   optimizer.applyGradients(variableGrads);
 
   const { loss: lossPrep, intermediates: intermediatePrep } =
-    getLossAndIntermediates(executions);
+    getLossAndIntermediates(executions, undefined, undefined, true);
 
   //loop through variables and save their value
   for (const execution of executions) {

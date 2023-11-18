@@ -10,9 +10,13 @@ export class RandomNumbersBlock extends BlockClass {
     super(id, false);
   }
 
-  forward = (inputs: Tensor[]): Tensor => {
-    const randomVal = tf.randomUniform([1, 2], 0, 1);
-    return randomVal;
+  forward = (inputs: Tensor[], sample?: boolean): Tensor => {
+    if (sample) {
+      const randomVal = tf.randomUniform([1, 2], 0, 1);
+      return randomVal;
+    } else {
+      return this.value;
+    }
   };
 
   getValue(): tf.Tensor<tf.Rank> | null {
