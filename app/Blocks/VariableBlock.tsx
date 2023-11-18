@@ -6,10 +6,12 @@ import { BlockType } from "../model";
 export class VariableBlock extends BlockClass {
   type = BlockType.VARIABLE;
 
-  variable = tf.variable(tf.tensor1d([1]), true, "a");
+  variable = tf.variable(tf.tensor1d([Math.random()]), true, "a");
 
   constructor(id: string) {
     super(id, false);
+
+    this.variable = tf.variable(tf.tensor1d([Math.random()]), true, id);
   }
 
   forward(inputs: Tensor[]): Tensor {

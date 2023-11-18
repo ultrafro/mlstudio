@@ -3,17 +3,20 @@ import { Tensor, Rank } from "@tensorflow/tfjs";
 import { BlockClass } from "./BlockClass";
 import { BlockType } from "../model";
 
-export class ConstantBlock extends BlockClass {
-  type = BlockType.CONSTANT;
-  value = tf.tensor1d([2]);
+export class FinalLossBlock extends BlockClass {
+  type = BlockType.FINAL_LOSS;
 
   constructor(id: string) {
     super(id, false);
-
-    this.viewables["|out0|"] = this.value.clone();
   }
 
   forward(inputs: Tensor[]): Tensor {
-    return this.value;
+    const result = inputs[0];
+
+    this.finalResultForTraining = result;
+
+    this.viewables["|in0|"] = result.clone();
+
+    return result;
   }
 }

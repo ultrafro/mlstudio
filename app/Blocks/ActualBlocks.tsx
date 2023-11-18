@@ -29,75 +29,108 @@ export async function initializeBlocks(network: Network, clear?: boolean) {
   }
 }
 
-export function forwardBlocks(network: Network) {
+function getInputTensors(
+  blockId: string,
+  network: Network,
+  intermediaryOutputs: Record<string, tf.Tensor>
+): { inputs: tf.Tensor[]; inputHashes: string[] } {
+  const block = ActualBlocks[blockId];
+
+  const inputs: tf.Tensor[] = [];
+  const inputHashes: string[] = [];
+
+  const definition = Blocks[block.type];
+  if (definition.nodeType == "source") {
+  }
+  if (definition.nodeType == "unary") {
+    const targetHandles = ["|in0|"];
+    gatherInputs(
+      targetHandles,
+      blockId,
+      network,
+      inputs,
+      inputHashes,
+      intermediaryOutputs
+    );
+  }
+  if (definition.nodeType == "binary") {
+    const targetHandles = ["|in0|", "|in1|"];
+    gatherInputs(
+      targetHandles,
+      blockId,
+      network,
+      inputs,
+      inputHashes,
+      intermediaryOutputs
+    );
+  }
+  if (definition.nodeType == "target") {
+    const targetHandles = ["|in0|"];
+    gatherInputs(
+      targetHandles,
+      blockId,
+      network,
+      inputs,
+      inputHashes,
+      intermediaryOutputs
+    );
+  }
+
+  return { inputs, inputHashes };
+}
+
+export function forwardBlocks(network: Network): Record<string, tf.Tensor> {
   //get a list of the blocks, sorted with leafs first
   const sortedBlockList = getSortedBlockIds(network);
 
-  //clear the model
-  //loop over each block, create list for inputs, call forward on that list
-
   const intermediaryOutputs: Record<string, tf.Tensor> = {};
 
+  // for (const step of steps) {
   for (const blockId of sortedBlockList) {
+    const { inputs, inputHashes } = getInputTensors(
+      blockId,
+      network,
+      intermediaryOutputs
+    );
+
     const block = ActualBlocks[blockId];
-
-    const inputs: tf.Tensor[] = [];
-
-    const definition = Blocks[block.type];
-    if (definition.nodeType == "source") {
-    }
-    if (definition.nodeType == "unary") {
-      const targetHandles = ["|in0|"];
-      const targetId = blockId;
-
-      for (const targetHandleId of targetHandles) {
-        //find connection with targetId and targetHandleId
-        const connection = Object.values(network.connections).find(
-          (connection) => {
-            return (
-              connection.target == targetId &&
-              connection.targetHandle == targetHandleId
-            );
-          }
-        );
-
-        if (!!connection) {
-          const hash = connection.source + connection.sourceHandle;
-          const input = intermediaryOutputs[hash];
-          inputs.push(input);
-        }
-      }
-    }
-    if (definition.nodeType == "binary") {
-      const targetHandles = ["|in0|", "|in1|"];
-      const targetId = blockId;
-
-      for (const targetHandleId of targetHandles) {
-        //find connection with targetId and targetHandleId
-        const connection = Object.values(network.connections).find(
-          (connection) => {
-            return (
-              connection.target == targetId &&
-              connection.targetHandle == targetHandleId
-            );
-          }
-        );
-
-        if (!!connection) {
-          const hash = connection.source + connection.sourceHandle;
-          const input = intermediaryOutputs[hash];
-          inputs.push(input);
-        }
-      }
-    }
-
     const output = block.forward(inputs);
-    const additionalOutputs = block.getAdditionalOutputs();
-
-    //save output to intermediaryOutputs
+    tf.keep(output);
     intermediaryOutputs[blockId + "|out0|"] = output;
+
+    const additionalOutputs = block.getAdditionalOutputs();
     for (const key in additionalOutputs) {
       intermediaryOutputs[blockId + key] = additionalOutputs[key];
+    }
+  }
+
+  return intermediaryOutputs;
+}
+
+function gatherInputs(
+  handleIds: string[],
+  blockId: string,
+  network: Network,
+  inputs: tf.Tensor[],
+  inputHashes: string[],
+  intermediaryOutputs: Record<string, tf.Tensor>
+) {
+  const targetId = blockId;
+
+  for (const targetHandleId of handleIds) {
+    //find connection with targetId and targetHandleId
+    const connection = Object.values(network.connections).find((connection) => {
+      return (
+        connection.target == targetId &&
+        connection.targetHandle == targetHandleId
+      );
+    });
+
+    if (!!connection) {
+      const hash = connection.source + connection.sourceHandle;
+      const input = intermediaryOutputs[hash];
+      inputs.push(input);
+      inputHashes.push(hash);
     }
   }
 }
@@ -160,22 +193,44 @@ function getNumberOfInputs(
   });
 
   return eligibleConnections.length;
-
-  // return 0;
 }
 
 export function backwardBlocks(
   id: string,
+  network: Network,
   optimizerConfig: OptimizerConfig,
   iterations: number
-) {}
+) {
+  const loss = () => {
+    const intermediate = forwardBlocks(network);
+
+    const outputTensor = ActualBlocks[id].finalResultForTraining;
+
+    if (!outputTensor) {
+      console.log("no training output tensor for block", id);
+    }
+    return outputTensor;
+  };
+
+  const { value, grads } = tf.variableGrads(loss as any); // gradient of f as respect of each variable
+
+  const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
+
+  optimizer.applyGradients(grads);
+
+  //redistribute grads back into blocks for future inspection
+  for (const key in grads) {
+    const block = ActualBlocks[key];
+    block.saveGrad(grads[key]);
+  }
+}
 
 export function useBlocks() {
   return ActualBlocks;
 }
 
 export const tensorflowTest3 = async () => {
-  const a = tf.variable(tf.tensor1d([1]), true, "a");
+  const a = tf.variable(tf.tensor1d([1]), true, "bac");
 
   const forward = (x: tf.Tensor) => {
     const pred = x.mul(a);
@@ -184,16 +239,22 @@ export const tensorflowTest3 = async () => {
 
   const loss = (x: tf.Tensor, y: tf.Tensor) => {
     const pred = forward(x);
-    return pred.sub(y).square().mean();
+    const result = pred.sub(y).square().mean();
+    return result;
+    // return pred.sub(y).square().mean();
   };
 
   const x = tf.randomUniform([1, 2], 0, 1);
   const y = x.mul(2);
 
+  const lossFunction = () => {
+    return loss(x, y);
+  };
+
   for (let i = 0; i < 100; i++) {
-    const lossFunction = () => {
-      return loss(x, y);
-    };
+    // const lossFunction = () => {
+    //   return loss(x, y);
+    // };
 
     const { value, grads } = tf.variableGrads(lossFunction as any); // gradient of f as respect of each variable
 
@@ -201,7 +262,7 @@ export const tensorflowTest3 = async () => {
 
     optimizer.applyGradients(grads);
 
-    console.log("grads", grads.a.dataSync());
+    console.log("grads", grads.bac.dataSync());
 
     console.log("loss at: " + i + ": " + value.dataSync());
   }

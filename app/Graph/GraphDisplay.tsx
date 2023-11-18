@@ -91,8 +91,6 @@ export default function GraphDisplay() {
   const onEdgesChangeWrapper: OnEdgesChange = (changes: EdgeChange[]) => {
     const newNetwork = { ...session.session.network };
 
-    console.log("edge change!", changes);
-
     for (const change of changes) {
       if (change.type == "select" && change.selected) {
         //print the viewable here:
@@ -104,7 +102,6 @@ export default function GraphDisplay() {
         const sourceHandle = edge?.sourceHandle || "";
 
         const block = ActualBlocks[source];
-        console.log("viewable:");
         const resultTensor = block.viewables[sourceHandle];
         console.log(resultTensor.dataSync());
       }
@@ -113,8 +110,6 @@ export default function GraphDisplay() {
         const id = change.id;
         const edge = reactFlowInstance.getEdge(change.id);
 
-        console.log("full edge info:");
-        console.log(edge);
         const source = edge?.source || "";
         const sourceHandle = edge?.sourceHandle || "";
         const target = edge?.target || "";
@@ -126,26 +121,13 @@ export default function GraphDisplay() {
         // const target = "|" + parts[5] + "|";
         // const targetHandle = "|" + parts[7] + "|";
 
-        console.log(
-          "got a remove!",
-          source,
-          sourceHandle,
-          target,
-          targetHandle
-        );
-
         const connectionId = getConnectionId({
           source,
           sourceHandle,
           target,
           targetHandle,
         });
-        console.log(
-          "deleting connection id: " +
-            connectionId +
-            " from network. is valid? " +
-            !!session.session.network.connections[connectionId]
-        );
+
         delete newNetwork.connections[connectionId];
       }
     }
@@ -175,8 +157,6 @@ export default function GraphDisplay() {
     onConnect(connection);
 
     session.setSession({ ...session.session, network: newNetwork });
-    console.log("new connection");
-    console.log(newNetwork);
   };
 
   useEffect(() => {

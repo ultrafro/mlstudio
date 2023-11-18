@@ -14,7 +14,7 @@ export class SquareLossBlock extends BlockClass {
     const x = inputs[0];
     const y = inputs[1];
 
-    const result = y.sub(y).square().mean();
+    const result = y.sub(x).square().mean();
 
     this.viewables["|in0|"] = x.clone();
     this.viewables["|in1|"] = y.clone();

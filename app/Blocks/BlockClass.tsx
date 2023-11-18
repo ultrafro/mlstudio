@@ -8,6 +8,8 @@ export class BlockClass {
 
   type: BlockType = BlockType.CONSTANT;
 
+  finalResultForTraining: Tensor | null = null;
+
   grads: Tensor = tf.tensor1d([1]);
 
   viewables: Record<string, Tensor> = {};

@@ -1,5 +1,6 @@
 import { BlockClass } from "./Blocks/BlockClass";
 import { ConstantBlock } from "./Blocks/ConstantBlock";
+import { FinalLossBlock } from "./Blocks/FinalLossBlock";
 import { LinearBlock } from "./Blocks/LinearBlock";
 import { MultiplyBlock } from "./Blocks/MultiplyBlock";
 import { RandomNumbersBlock } from "./Blocks/RandomNumbersBlock";
@@ -22,7 +23,7 @@ export type BlockDefinition = {
   name: string;
   icon: string;
   classDef: typeof BlockClass;
-  nodeType: "source" | "target" | "unary" | "binary";
+  nodeType: "source" | "target" | "unary" | "binary" | "sink";
 };
 
 export enum BlockType {
@@ -36,6 +37,7 @@ export enum BlockType {
   VARIABLE = "VARIABLE",
   CONSTANT = "CONSTANT",
   SQUARE_LOSS = "SQUARE_LOSS",
+  FINAL_LOSS = "FINAL_LOSS",
 }
 
 export const Blocks: Record<BlockType, BlockDefinition> = {
@@ -98,6 +100,12 @@ export const Blocks: Record<BlockType, BlockDefinition> = {
     icon: "icons/square_loss.png",
     classDef: SquareLossBlock,
     nodeType: "binary",
+  },
+  [BlockType.FINAL_LOSS]: {
+    name: "Final Loss",
+    icon: "icons/final_loss.png",
+    classDef: FinalLossBlock,
+    nodeType: "target",
   },
 };
 
@@ -197,6 +205,12 @@ export const DEFAULT_SESSION: StudioSession = {
         x: 400,
         y: 400,
       },
+      "|7|": {
+        id: "|7|",
+        type: BlockType.FINAL_LOSS,
+        x: 1000,
+        y: 200,
+      },
     },
     connections: {
       "|4|_|out0|_|3|_|in1|": {
@@ -233,6 +247,12 @@ export const DEFAULT_SESSION: StudioSession = {
         source: "|6|",
         sourceHandle: "|out0|",
         target: "|5|",
+        targetHandle: "|in0|",
+      },
+      "|5|_|out0|_|7|_|in0|": {
+        source: "|5|",
+        sourceHandle: "|out0|",
+        target: "|7|",
         targetHandle: "|in0|",
       },
     },

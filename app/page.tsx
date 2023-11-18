@@ -7,11 +7,14 @@ import TopBar from "./TopBar";
 import LeftBar from "./LeftBar";
 import GraphDisplay from "./Graph/GraphDisplay";
 import { FlexCol, FlexRow } from "./Flex";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DataModal } from "./DataModal/DataModal";
 import { SessionProivder } from "./Providers";
 import { DEFAULT_SESSION, StudioSession } from "./model";
 import { ReactFlowProvider } from "reactflow";
+import { tensorflowTest3 } from "./Blocks/ActualBlocks";
+
+let hasInitialized = false;
 
 export default function Home() {
   const { mode, setMode } = useMode();
@@ -24,6 +27,13 @@ export default function Home() {
 
   // console.log("session");
   // console.log(session.network);
+
+  useEffect(() => {
+    if (!hasInitialized) {
+      hasInitialized = true;
+      tensorflowTest3();
+    }
+  }, []);
 
   return (
     <main>
