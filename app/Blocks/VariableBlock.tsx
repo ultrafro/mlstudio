@@ -14,17 +14,24 @@ export class VariableBlock extends BlockClass {
     this.variable = tf.variable(tf.tensor1d([Math.random()]), true, id);
   }
 
-  forward(inputs: Tensor[]): Tensor {
-    this.viewables["|out0|"] = this.variable.clone();
-
+  forward = (inputs: Tensor[]): Tensor => {
     return this.variable;
+  };
+
+  override saveValue(value: Tensor) {
+    //dont do anything
   }
 
-  getValue(): Tensor | null {
-    return this.variable;
+  override saveGrad(grads: Tensor) {
+    this.grads = grads;
   }
 
-  getGrads(): tf.Tensor<tf.Rank> | null {
-    return this.grads;
+  //some blocks, like multiply, don't have state
+  override getValue(): Tensor | null {
+    return this.variable ?? null;
+  }
+
+  override getGrads(): Tensor | null {
+    return this.grads ?? null;
   }
 }

@@ -1,8 +1,14 @@
 import * as tf from "@tensorflow/tfjs";
-import { Blocks, Network, OptimizerConfig } from "../model";
+import { BlockType, Blocks, Network, OptimizerConfig } from "../model";
 import { BlockClass } from "./BlockClass";
 
 export const ActualBlocks: Record<string, BlockClass> = {};
+
+type BlockExecution = {
+  id: string;
+  inputs: string[];
+  func: (inputs: tf.Tensor[]) => tf.Tensor;
+};
 
 export async function initializeBlocks(network: Network, clear?: boolean) {
   if (clear) {
@@ -96,12 +102,15 @@ export function forwardBlocks(network: Network): Record<string, tf.Tensor> {
     const block = ActualBlocks[blockId];
     const output = block.forward(inputs);
     tf.keep(output);
-    intermediaryOutputs[blockId + "|out0|"] = output;
 
-    const additionalOutputs = block.getAdditionalOutputs();
-    for (const key in additionalOutputs) {
-      intermediaryOutputs[blockId + key] = additionalOutputs[key];
-    }
+    intermediaryOutputs[blockId] = output;
+
+    // intermediaryOutputs[blockId + "|out0|"] = output;
+
+    // const additionalOutputs = block.getAdditionalOutputs();
+    // for (const key in additionalOutputs) {
+    //   intermediaryOutputs[blockId + key] = additionalOutputs[key];
+    // }
   }
 
   return intermediaryOutputs;
@@ -127,7 +136,8 @@ function gatherInputs(
     });
 
     if (!!connection) {
-      const hash = connection.source + connection.sourceHandle;
+      // const hash = connection.source + connection.sourceHandle;
+      const hash = connection.source;
       const input = intermediaryOutputs[hash];
       inputs.push(input);
       inputHashes.push(hash);
@@ -195,45 +205,148 @@ function getNumberOfInputs(
   return eligibleConnections.length;
 }
 
+function GetBlockExecutions(network: Network): BlockExecution[] {
+  const result: BlockExecution[] = [];
+
+  const sortedBlockList = getSortedBlockIds(network);
+
+  const intermediaryOutputs: Record<string, tf.Tensor> = {};
+
+  for (const blockId of sortedBlockList) {
+    const newExecution: BlockExecution = {
+      id: blockId,
+      inputs: [],
+      func: (inputs: tf.Tensor[]) => {
+        return inputs[0];
+      },
+    };
+
+    const { inputs, inputHashes } = getInputTensors(
+      blockId,
+      network,
+      intermediaryOutputs
+    );
+
+    newExecution.inputs = inputHashes;
+
+    const block = ActualBlocks[blockId];
+    newExecution.func = block.forward;
+
+    result.push(newExecution);
+  }
+
+  return result;
+}
+
+function getLossAndIntermediates(
+  executions: BlockExecution[],
+  overWriteId?: string,
+  overWriteTensor?: tf.Tensor
+): {
+  loss: tf.Tensor;
+  intermediates: Record<string, tf.Tensor>;
+} {
+  let outputId: string | null = null;
+
+  const intermediaryOutputs: Record<string, tf.Tensor> = {};
+  for (const execution of executions) {
+    const blockId = execution.id;
+
+    const inputs: tf.Tensor[] = [];
+    for (const inputHash of execution.inputs) {
+      inputs.push(intermediaryOutputs[inputHash]);
+    }
+    const output = execution.func(inputs);
+
+    if (blockId == overWriteId) {
+      intermediaryOutputs[blockId] = overWriteTensor as any;
+    } else {
+      intermediaryOutputs[blockId] = output;
+    }
+
+    if (ActualBlocks[blockId].type == BlockType.FINAL_LOSS) {
+      outputId = blockId;
+    }
+  }
+
+  if (outputId == null) {
+    console.log("no output id found");
+  }
+
+  const outputTensor = intermediaryOutputs[outputId ?? ""];
+  return { loss: outputTensor, intermediates: intermediaryOutputs };
+}
+
 export function backwardBlocks(
   id: string,
   network: Network,
   optimizerConfig: OptimizerConfig,
   iterations: number
 ) {
-  let intermediate: Record<string, tf.Tensor<tf.Rank>> = {};
+  const executions = GetBlockExecutions(network);
 
-  const loss = () => {
-    intermediate = forwardBlocks(network);
-
-    const outputTensor = ActualBlocks[id].finalResultForTraining;
-
-    if (!outputTensor) {
-      console.log("no training output tensor for block", id);
-    }
-    return outputTensor;
+  const loss2 = () => {
+    const { loss, intermediates } = getLossAndIntermediates(executions);
+    return loss;
   };
 
-  const { value, grads } = tf.variableGrads(loss as any); // gradient of f as respect of each variable
-
-  const calculateGrdds = tf.grads(forwardBlocks);
-
-  const calculateGrads = tf.grad(loss as any);
-  const grads2 = calculateGrads(ActualBlocks["|5|"].internalTensor as any);
-
-  debugger;
-
-  // const allGrads = tf.grads(loss, [var])[0]
+  const { value, grads: variableGrads } = tf.variableGrads(loss2 as any); // gradient of f as respect of each variable
 
   const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
 
-  optimizer.applyGradients(grads);
+  optimizer.applyGradients(variableGrads);
 
-  //redistribute grads back into blocks for future inspection
-  for (const key in grads) {
-    const block = ActualBlocks[key];
-    block.saveGrad(grads[key]);
+  const { loss: lossPrep, intermediates: intermediatePrep } =
+    getLossAndIntermediates(executions);
+
+  //loop through variables and save their value
+  for (const execution of executions) {
+    const blockId = execution.id;
+
+    //if its not the final loss block:
+    if (ActualBlocks[blockId].type != BlockType.FINAL_LOSS) {
+      const blockValue = intermediatePrep[blockId];
+
+      ActualBlocks[blockId].saveValue(blockValue);
+    }
   }
+
+  //loop through and calculate grad for each block
+  for (const execution of executions) {
+    const blockId = execution.id;
+
+    //if its not the final loss block:
+    if (ActualBlocks[blockId].type != BlockType.FINAL_LOSS) {
+      let blockValue = intermediatePrep[blockId];
+
+      const lossFromBlock = (blockValue: tf.Tensor): tf.Tensor => {
+        const { loss, intermediates } = getLossAndIntermediates(
+          executions,
+          blockId,
+          blockValue
+        );
+        return loss;
+      };
+
+      const calculateGrads = tf.valueAndGrad(lossFromBlock);
+      const stuff = calculateGrads(blockValue);
+
+      ActualBlocks[blockId].saveGrad(stuff.grad);
+    }
+  }
+
+  // //loop through all blocks and print their values and grads
+  // for (const execution of executions) {
+  //   const blockId = execution.id;
+
+  //   const block = ActualBlocks[blockId];
+
+  //   console.log(
+  //     "block: " + blockId,
+  //     block.getValue()?.dataSync(),
+  //     block.getGrads()?.dataSync()
+  //   );
+  // }
 }
 
 export function useBlocks() {

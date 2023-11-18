@@ -10,13 +10,11 @@ export class FinalLossBlock extends BlockClass {
     super(id, false);
   }
 
-  forward(inputs: Tensor[]): Tensor {
-    const result = inputs[0];
-
-    this.finalResultForTraining = result;
-
-    this.viewables["|in0|"] = result.clone();
+  forward = (inputs: Tensor[]): Tensor => {
+    //just copy the first input
+    const result = tf.mul(inputs[0], 1);
+    // const result = inputs[0].clone();
 
     return result;
-  }
+  };
 }

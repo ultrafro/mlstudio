@@ -10,9 +10,9 @@ export class BlockClass {
 
   internalTensor: Tensor | null = null;
 
-  finalResultForTraining: Tensor | null = null;
+  value?: Tensor;
 
-  grads: Tensor = tf.tensor1d([1]);
+  grads?: Tensor;
 
   viewables: Record<string, Tensor> = {};
 
@@ -23,14 +23,18 @@ export class BlockClass {
 
   async initialize() {}
 
-  forward(inputs: Tensor[]): Tensor {
+  forward = (inputs: Tensor[]): Tensor => {
     return inputs[0];
-  }
+  };
 
   getAdditionalOutputs(): Record<string, Tensor> {
     //return in the form of:
     // {"|out1|": tf.tensor1d([1]), "|out2|": tf.tensor1d([1])}
     return {};
+  }
+
+  saveValue(value: Tensor) {
+    this.value = value;
   }
 
   saveGrad(grads: Tensor) {
@@ -39,11 +43,11 @@ export class BlockClass {
 
   //some blocks, like multiply, don't have state
   getValue(): Tensor | null {
-    return null;
+    return this.value ?? null;
   }
 
   getGrads(): Tensor | null {
-    return null;
+    return this.grads ?? null;
   }
 
   destroy() {}

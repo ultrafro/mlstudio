@@ -13,7 +13,24 @@ export class ConstantBlock extends BlockClass {
     this.viewables["|out0|"] = this.value.clone();
   }
 
-  forward(inputs: Tensor[]): Tensor {
+  forward = (inputs: Tensor[]): Tensor => {
     return this.value;
+  };
+
+  override saveValue(value: Tensor) {
+    //dont do anything
+  }
+
+  override saveGrad(grads: Tensor) {
+    this.grads = grads;
+  }
+
+  //some blocks, like multiply, don't have state
+  override getValue(): Tensor | null {
+    return this.value ?? null;
+  }
+
+  override getGrads(): Tensor | null {
+    return this.grads ?? null;
   }
 }

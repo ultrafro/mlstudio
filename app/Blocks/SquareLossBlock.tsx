@@ -12,17 +12,12 @@ export class SquareLossBlock extends BlockClass {
     super(id, false);
   }
 
-  forward(inputs: Tensor[]): Tensor {
+  forward = (inputs: Tensor[]): Tensor => {
     const x = inputs[0];
     const y = inputs[1];
 
     const result = y.sub(x).square().mean();
-    this.internalTensor = result;
-
-    this.viewables["|in0|"] = x.clone();
-    this.viewables["|in1|"] = y.clone();
-    this.viewables["|out0|"] = result.clone();
 
     return result;
-  }
+  };
 }
