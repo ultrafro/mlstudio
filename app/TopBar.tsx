@@ -1,6 +1,7 @@
 import { Button } from "@mantine/core";
 import { FlexCol, FlexRow, Icon } from "./Flex";
 import {
+  ActualBlocks,
   backwardBlocks,
   forwardBlocks,
   initializeBlocks,
@@ -76,8 +77,15 @@ export default function TopBar(props: { openData: () => void }) {
           src="/icons/run.png"
           onClick={async () => {
             await initializeBlocks(session.session.network);
-            //forwardBlocks(session.session.network);
+            forwardBlocks(session.session.network);
+
+            //todo: make this find the "final loss" block, right now it's hard coded
             backwardBlocks("|7|", session.session.network, {}, 1);
+
+            //print the value of the "|2|" block
+            const variableBlock = ActualBlocks["|2|"];
+            console.log("variable value: " + variableBlock.getValue());
+            console.log("variable grad: " + variableBlock.getGrads());
           }}
         />
       </FlexRow>

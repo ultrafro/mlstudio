@@ -31,7 +31,7 @@ export default function Home() {
   useEffect(() => {
     if (!hasInitialized) {
       hasInitialized = true;
-      tensorflowTest3();
+      //tensorflowTest3();
     }
   }, []);
 

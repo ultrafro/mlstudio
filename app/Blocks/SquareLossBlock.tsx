@@ -6,6 +6,8 @@ import { BlockType } from "../model";
 export class SquareLossBlock extends BlockClass {
   type = BlockType.SQUARE_LOSS;
 
+  internalTensor: tf.Tensor<Rank> = tf.scalar(0);
+
   constructor(id: string) {
     super(id, false);
   }
@@ -15,6 +17,7 @@ export class SquareLossBlock extends BlockClass {
     const y = inputs[1];
 
     const result = y.sub(x).square().mean();
+    this.internalTensor = result;
 
     this.viewables["|in0|"] = x.clone();
     this.viewables["|in1|"] = y.clone();

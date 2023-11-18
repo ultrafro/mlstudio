@@ -201,8 +201,10 @@ export function backwardBlocks(
   optimizerConfig: OptimizerConfig,
   iterations: number
 ) {
+  let intermediate: Record<string, tf.Tensor<tf.Rank>> = {};
+
   const loss = () => {
-    const intermediate = forwardBlocks(network);
+    intermediate = forwardBlocks(network);
 
     const outputTensor = ActualBlocks[id].finalResultForTraining;
 
@@ -213,6 +215,15 @@ export function backwardBlocks(
   };
 
   const { value, grads } = tf.variableGrads(loss as any); // gradient of f as respect of each variable
+
+  const calculateGrdds = tf.grads(forwardBlocks);
+
+  const calculateGrads = tf.grad(loss as any);
+  const grads2 = calculateGrads(ActualBlocks["|5|"].internalTensor as any);
+
+  debugger;
+
+  // const allGrads = tf.grads(loss, [var])[0]
 
   const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
 
