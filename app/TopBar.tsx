@@ -2,7 +2,6 @@ import { Button } from "@mantine/core";
 import { FlexCol, FlexRow, Icon } from "./Flex";
 import {
   ActualBlocks,
-  backwardBlocks,
   forwardBlocks,
   initializeBlocks,
   trainBlocks,
@@ -60,7 +59,21 @@ export default function TopBar(props: { openData: () => void }) {
         }}
       >
         <Icon src="/icons/trash.png" />
-        <Icon src="/icons/play.png" />
+        <Icon
+          src="/icons/play.png"
+          onClick={async () => {
+            await initializeBlocks(session.session.network);
+            //forwardBlocks(session.session.network);
+
+            //todo: make this find the "final loss" block, right now it's hard coded
+            trainBlocks("|7|", session.session.network, {}, 1);
+
+            //print the value of the "|2|" block
+            const variableBlock = ActualBlocks["|2|"];
+            console.log("variable value: " + variableBlock.getValue());
+            console.log("variable grad: " + variableBlock.getGrads());
+          }}
+        />
         <Icon src="/icons/ff.png" />
       </FlexRow>
 
@@ -76,17 +89,9 @@ export default function TopBar(props: { openData: () => void }) {
       >
         <Icon
           src="/icons/run.png"
-          onClick={async () => {
-            await initializeBlocks(session.session.network);
-            //forwardBlocks(session.session.network);
-
-            //todo: make this find the "final loss" block, right now it's hard coded
-            trainBlocks("|7|", session.session.network, {}, 1);
-
-            //print the value of the "|2|" block
-            const variableBlock = ActualBlocks["|2|"];
-            console.log("variable value: " + variableBlock.getValue());
-            console.log("variable grad: " + variableBlock.getGrads());
+          onClick={() => {
+            //print out the network
+            console.log(session.session.network);
           }}
         />
       </FlexRow>

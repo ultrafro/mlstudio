@@ -6,6 +6,7 @@ import { MultiplyBlock } from "./Blocks/MultiplyBlock";
 import { RandomNumbersBlock } from "./Blocks/RandomNumbersBlock";
 import { SquareLossBlock } from "./Blocks/SquareLossBlock";
 import { VariableBlock } from "./Blocks/VariableBlock";
+import { SIMPLE_TRAINING_GRAPH } from "./Samples/SimpleTrainingGraph";
 
 export type block = {
   name: string;
@@ -166,97 +167,7 @@ export const DEFAULT_SESSION: StudioSession = {
   //   },
   //   connections: {},
   // },
-  network: {
-    blocks: {
-      "|0|": {
-        id: "|0|",
-        type: BlockType.RANDOM_NUMBERS,
-        x: 100,
-        y: 200,
-      },
-      "|2|": {
-        id: "|2|",
-        type: BlockType.VARIABLE,
-        x: 100,
-        y: 400,
-      },
-      "|4|": {
-        id: "|4|",
-        type: BlockType.CONSTANT,
-        x: 100,
-        y: 0,
-      },
-      "|3|": {
-        id: "|3|",
-        type: BlockType.MULTIPLY,
-        x: 400,
-        y: 200,
-      },
-
-      "|5|": {
-        id: "|5|",
-        type: BlockType.SQUARE_LOSS,
-        x: 800,
-        y: 200,
-      },
-      "|6|": {
-        id: "|6|",
-        type: BlockType.MULTIPLY,
-        x: 400,
-        y: 400,
-      },
-      "|7|": {
-        id: "|7|",
-        type: BlockType.FINAL_LOSS,
-        x: 1000,
-        y: 200,
-      },
-    },
-    connections: {
-      "|4|_|out0|_|3|_|in1|": {
-        source: "|4|",
-        sourceHandle: "|out0|",
-        target: "|3|",
-        targetHandle: "|in1|",
-      },
-      "|0|_|out0|_|3|_|in0|": {
-        source: "|0|",
-        sourceHandle: "|out0|",
-        target: "|3|",
-        targetHandle: "|in0|",
-      },
-      "|0|_|out0|_|6|_|in1|": {
-        source: "|0|",
-        sourceHandle: "|out0|",
-        target: "|6|",
-        targetHandle: "|in1|",
-      },
-      "|2|_|out0|_|6|_|in0|": {
-        source: "|2|",
-        sourceHandle: "|out0|",
-        target: "|6|",
-        targetHandle: "|in0|",
-      },
-      "|3|_|out0|_|5|_|in1|": {
-        source: "|3|",
-        sourceHandle: "|out0|",
-        target: "|5|",
-        targetHandle: "|in1|",
-      },
-      "|6|_|out0|_|5|_|in0|": {
-        source: "|6|",
-        sourceHandle: "|out0|",
-        target: "|5|",
-        targetHandle: "|in0|",
-      },
-      "|5|_|out0|_|7|_|in0|": {
-        source: "|5|",
-        sourceHandle: "|out0|",
-        target: "|7|",
-        targetHandle: "|in0|",
-      },
-    },
-  },
+  network: { ...SIMPLE_TRAINING_GRAPH } as any,
   visualizers: {},
   supervisedDataShape: {
     inputDimensions: [28, 28],
