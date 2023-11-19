@@ -102,8 +102,12 @@ export default function GraphDisplay() {
         const sourceHandle = edge?.sourceHandle || "";
 
         const block = ActualBlocks[source];
-        const resultTensor = block.viewables[sourceHandle];
-        console.log(resultTensor.dataSync());
+
+        console.log(block.getValue()?.dataSync());
+        console.log(block.getGrads()?.dataSync());
+
+        // const resultTensor = block.viewables[sourceHandle];
+        // console.log(resultTensor.dataSync());
       }
 
       if (change.type == "remove") {
