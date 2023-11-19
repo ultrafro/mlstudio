@@ -72,6 +72,8 @@ export default function TopBar(props: { openData: () => void }) {
             const variableBlock = ActualBlocks["|2|"];
             console.log("variable value: " + variableBlock.getValue());
             console.log("variable grad: " + variableBlock.getGrads());
+
+            session.setSession({ ...session.session, blocksChanged: {} });
           }}
         />
         <Icon src="/icons/ff.png" />

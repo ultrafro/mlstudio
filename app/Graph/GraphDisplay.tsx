@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { FlexCol, FlexRow } from "../Flex";
 import ReactFlow, {
   useEdgesState,
@@ -52,8 +52,25 @@ export default function GraphDisplay() {
   const session = useContext(SessionProivder);
   const hash = useExistenceHash();
 
+  const [redisplay, setRedisplay] = useState({});
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const labeledEdges = useMemo(() => {
+    const newEdges = [...edges];
+    for (const edge of newEdges) {
+      const source = ActualBlocks[edge.source];
+      const target = ActualBlocks[edge.target];
+      if (source && target) {
+        edge.label =
+          source?.getValue()?.dataSync()?.toString().substring(0, 4) +
+          " | " +
+          target?.getGrads()?.dataSync().toString().substring(0, 4);
+      }
+    }
+    return newEdges;
+  }, [edges, session.session]);
 
   const onConnect = useCallback(
     (params: any) => setEdges((eds) => addEdge(params, eds)),
@@ -196,7 +213,7 @@ export default function GraphDisplay() {
     >
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={labeledEdges}
         onNodesChange={onNodesChangeWrapper}
         onEdgesChange={onEdgesChangeWrapper}
         onConnect={onConnectWrapper}

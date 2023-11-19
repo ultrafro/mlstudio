@@ -147,6 +147,7 @@ export type StudioSession = {
   network: Network;
   visualizers: Record<string, { blockId: string; handleId: string }>;
   supervisedDataShape: SupervisedDataShape;
+  blocksChanged?: Record<string, boolean>;
 };
 
 export const DEFAULT_SESSION: StudioSession = {
