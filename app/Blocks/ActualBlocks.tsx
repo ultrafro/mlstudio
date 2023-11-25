@@ -1,6 +1,13 @@
 import * as tf from "@tensorflow/tfjs";
-import { BlockType, Blocks, Network, OptimizerConfig } from "../model";
+import {
+  BlockType,
+  Blocks,
+  Network,
+  OptimizerConfig,
+  SupervisedDataShape,
+} from "../model";
 import { BlockClass } from "./BlockClass";
+import { actualData } from "./ActualData";
 
 export const ActualBlocks: Record<string, BlockClass> = {};
 
@@ -284,6 +291,9 @@ export function trainBlocks(
   optimizerConfig: OptimizerConfig,
   iterations: number
 ) {
+  //get a data sample'
+  actualData.newSample();
+
   const executions = GetBlockExecutions(network);
 
   const loss2 = () => {

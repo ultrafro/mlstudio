@@ -13,6 +13,7 @@ import { SessionProivder } from "./Providers";
 import { DEFAULT_SESSION, StudioSession } from "./model";
 import { ReactFlowProvider } from "reactflow";
 import { tensorflowTest3 } from "./Blocks/ActualBlocks";
+import { actualData } from "./Blocks/ActualData";
 
 let hasInitialized = false;
 
@@ -34,6 +35,10 @@ export default function Home() {
       //tensorflowTest3();
     }
   }, []);
+
+  useEffect(() => {
+    actualData.setSupervisedDataShape(session.supervisedDataShape);
+  }, [session.supervisedDataShape]);
 
   return (
     <main>

@@ -1,12 +1,18 @@
-import { CSSProperties, memo, useCallback } from "react";
+import { CSSProperties, memo, useCallback, useContext } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import { MIDDLE_HANDLE_HEIGHT, NODE_WIDTH } from "./GraphNodeConstants";
+import { SessionProivder } from "../Providers";
 
 function TargetNode(props: NodeProps) {
+  const session = useContext(SessionProivder);
+
   const baseStyle = {
     padding: 10,
     background: "#fff",
-    border: "1px solid #ddd",
+    border:
+      session.session.selectedBlockId == props.id
+        ? "1px solid #0dd"
+        : "1px solid #ddd",
     width: NODE_WIDTH,
     height: "200px",
   };

@@ -1,7 +1,12 @@
+import { nanoid } from "nanoid";
 import { FlexCol, FlexRow, Icon } from "./Flex";
-import { Blocks, blocks } from "./model";
+import { SessionProivder } from "./Providers";
+import { BlockType, Blocks, blocks } from "./model";
+import { useContext } from "react";
 
 export default function LeftBar() {
+  const session = useContext(SessionProivder);
+
   return (
     <FlexCol
       style={{
@@ -44,23 +49,48 @@ export default function LeftBar() {
           justifyContent: "space-around",
         }}
       >
-        {Object.values(Blocks).map((block) => {
+        {Object.keys(Blocks).map((block) => {
+          const blockDefinition = Blocks[block as BlockType];
           return (
-            <FlexCol
-              key={"block_name_" + block.name}
-              style={{
-                width: "100px",
-                height: "100px",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "white",
-                borderRadius: "10px",
-                border: "2px solid black",
+            <button
+              key={"block_name_" + block}
+              onClick={() => {
+                const newBlockId = "|" + nanoid() + "|";
+                const x = Math.random() * 300;
+                const y = Math.random() * 300;
+
+                session.setSession({
+                  ...session.session,
+                  network: {
+                    ...session.session.network,
+                    blocks: {
+                      ...session.session.network.blocks,
+                      [newBlockId]: {
+                        id: newBlockId,
+                        type: block as BlockType,
+                        x,
+                        y,
+                      },
+                    },
+                  },
+                });
               }}
             >
-              <Icon src={block.icon} />
-              <div>{block.name}</div>
-            </FlexCol>
+              <FlexCol
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  border: "2px solid black",
+                }}
+              >
+                <Icon src={blockDefinition.icon} />
+                <div>{blockDefinition.name}</div>
+              </FlexCol>
+            </button>
           );
         })}
       </FlexRow>

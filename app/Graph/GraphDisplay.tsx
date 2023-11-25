@@ -16,6 +16,10 @@ import ReactFlow, {
   Connection,
   Edge,
   useReactFlow,
+  useOnSelectionChange,
+  getIncomers,
+  getOutgoers,
+  getConnectedEdges,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -32,6 +36,7 @@ import TargetNode from "./TargetNode";
 import UnaryNode from "./UnaryNode";
 import BinaryNode from "./BinaryNode";
 import { ActualBlocks, tensorflowTest3 } from "../Blocks/ActualBlocks";
+import { Blocks } from "../model";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -77,6 +82,56 @@ export default function GraphDisplay() {
     [setEdges]
   );
 
+  useOnSelectionChange({
+    onChange: ({ nodes, edges }) => {
+      const newSelectedBlockId = nodes.length == 1 ? nodes[0].id : "";
+
+      if (newSelectedBlockId != session.session.selectedBlockId) {
+        session.setSession({
+          ...session.session,
+          selectedBlockId: newSelectedBlockId,
+        });
+      } else {
+        if (!!session.session.selectedBlockId) {
+          session.setSession({
+            ...session.session,
+            selectedBlockId: "",
+          });
+        }
+      }
+
+      // setSelectedNodes(nodes.map((node) => node.id));
+      // setSelectedEdges(edges.map((edge) => edge.id));
+    },
+  });
+
+  const onNodesDelete = useCallback(
+    (deleted: any) => {
+      setEdges(
+        deleted.reduce((acc: any, node: any) => {
+          const incomers = getIncomers(node, nodes, edges);
+          const outgoers = getOutgoers(node, nodes, edges);
+          const connectedEdges = getConnectedEdges([node], edges);
+
+          const remainingEdges = acc.filter(
+            (edge: any) => !connectedEdges.includes(edge)
+          );
+
+          const createdEdges = incomers.flatMap(({ id: source }) =>
+            outgoers.map(({ id: target }) => ({
+              id: `${source}->${target}`,
+              source,
+              target,
+            }))
+          );
+
+          return [...remainingEdges, ...createdEdges];
+        }, edges)
+      );
+    },
+    [nodes, edges]
+  );
+
   const reactFlowInstance = useReactFlow();
 
   const onNodesChangeWrapper: OnNodesChange = (changes: NodeChange[]) => {
@@ -85,8 +140,16 @@ export default function GraphDisplay() {
 
     //adjust network block positions:
     const newNetwork = { ...session.session.network };
+    const newChanges: NodeChange[] = [];
     for (const node of changes) {
+      let addChange = true;
       if (node.type == "remove") {
+        const block = newNetwork.blocks[node.id];
+        if (Blocks[block.type]?.notDeletable) {
+          addChange = false;
+        } else {
+          delete newNetwork.blocks[node.id];
+        }
       }
 
       if (node.type == "add") {
@@ -99,9 +162,13 @@ export default function GraphDisplay() {
           block.y = node.positionAbsolute.y;
         }
       }
+
+      if (addChange) {
+        newChanges.push(node);
+      }
     }
 
-    onNodesChange(changes);
+    onNodesChange(newChanges);
     session.setSession({ ...session.session, network: newNetwork });
   };
 
@@ -120,8 +187,8 @@ export default function GraphDisplay() {
 
         const block = ActualBlocks[source];
 
-        console.log(block.getValue()?.dataSync());
-        console.log(block.getGrads()?.dataSync());
+        console.log(block?.getValue()?.dataSync());
+        console.log(block?.getGrads()?.dataSync());
 
         // const resultTensor = block.viewables[sourceHandle];
         // console.log(resultTensor.dataSync());
@@ -217,6 +284,7 @@ export default function GraphDisplay() {
         onNodesChange={onNodesChangeWrapper}
         onEdgesChange={onEdgesChangeWrapper}
         onConnect={onConnectWrapper}
+        onNodesDelete={onNodesDelete}
         nodeTypes={nodeDefinitions}
       >
         <Controls />

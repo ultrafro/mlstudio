@@ -1,19 +1,32 @@
-import { useState } from "react";
+import { useState, useContext, useMemo } from "react";
 import { FlexCol, FlexRow, FlexColCenter, FlexRowCenter, Modal } from "../Flex";
 import { SupervisedDataShape } from "../model";
 import DataPreview from "./DataPreview";
+import { SessionProivder } from "../Providers";
 
 export function DataModal(props: { onClose: () => void }) {
-  const [data, setData] = useState<SupervisedDataShape>({
-    srcType: "MNIST",
-    inputDimensions: [28, 28, 1],
-    outputDimensions: [10],
-    inputType: "image",
-    outputType: "numbers",
-    trainProportion: 0.8,
-    valProportion: 0.1,
-    testProportion: 0.1,
-  });
+  const sessionContext = useContext(SessionProivder);
+
+  const data = sessionContext.session.supervisedDataShape;
+  const setData: (shape: SupervisedDataShape) => void = (
+    shape: SupervisedDataShape
+  ) => {
+    sessionContext.setSession({
+      ...sessionContext.session,
+      supervisedDataShape: shape,
+    });
+  };
+
+  // const [data, setData] = useState<SupervisedDataShape>({
+  //   srcType: "MNIST",
+  //   inputDimensions: [28, 28, 1],
+  //   outputDimensions: [10],
+  //   inputType: "image",
+  //   outputType: "numbers",
+  //   trainProportion: 0.8,
+  //   valProportion: 0.1,
+  //   testProportion: 0.1,
+  // });
 
   return (
     <Modal>
