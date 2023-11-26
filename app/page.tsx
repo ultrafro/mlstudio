@@ -63,7 +63,16 @@ export default function Home() {
                   justifyContent: "flex-start",
                 }}
               >
-                <LeftBar />
+                <div
+                  style={{
+                    width: "20%",
+                    height: "100%",
+                    overflowY: "auto",
+                    position: "relative",
+                  }}
+                >
+                  <LeftBar />
+                </div>
                 <ReactFlowProvider>
                   <GraphDisplay />
                 </ReactFlowProvider>

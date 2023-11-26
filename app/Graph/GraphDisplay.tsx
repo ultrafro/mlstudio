@@ -37,6 +37,7 @@ import UnaryNode from "./UnaryNode";
 import BinaryNode from "./BinaryNode";
 import { ActualBlocks, tensorflowTest3 } from "../Blocks/ActualBlocks";
 import { Blocks } from "../model";
+import SelectedGraph from "./SelectedGraph";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -276,6 +277,7 @@ export default function GraphDisplay() {
         borderRadius: "10px",
         border: "2px solid black",
         margin: "12px",
+        position: "relative",
       }}
     >
       <ReactFlow
@@ -291,6 +293,7 @@ export default function GraphDisplay() {
         <MiniMap />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
+      <SelectedGraph />
     </FlexCol>
   );
 }
