@@ -38,6 +38,7 @@ import BinaryNode from "./BinaryNode";
 import { ActualBlocks, tensorflowTest3 } from "../Blocks/ActualBlocks";
 import { Blocks } from "../model";
 import SelectedGraph from "./SelectedGraph";
+import { useInitializeBlocks } from "../utils";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -57,6 +58,8 @@ const nodeDefinitions = {
 export default function GraphDisplay() {
   const session = useContext(SessionProivder);
   const hash = useExistenceHash();
+
+  useInitializeBlocks();
 
   const [redisplay, setRedisplay] = useState({});
 

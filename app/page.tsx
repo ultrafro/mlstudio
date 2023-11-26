@@ -1,8 +1,10 @@
 "use client"; //
+import "@mantine/core/styles.css";
+
 import { MantineProvider, createTheme } from "@mantine/core";
 
 import Image from "next/image";
-import { Mode, useMode } from "./utils";
+import { Mode, useInitializeBlocks, useMode } from "./utils";
 import TopBar from "./TopBar";
 import LeftBar from "./LeftBar";
 import GraphDisplay from "./Graph/GraphDisplay";

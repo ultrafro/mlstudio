@@ -71,7 +71,7 @@ const SimpleChart: React.FC<ChartProps> = ({
         position: "bottom",
       },
       y: {
-        min: 0,
+        // min: 0,
       },
       maintainAspectRatio: false,
     },

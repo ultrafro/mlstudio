@@ -6,7 +6,9 @@ import { actualData } from "./ActualData";
 
 export class DataInBlock extends BlockClass {
   type = BlockType.DATA_IN;
-  value = tf.tensor1d([2]);
+
+  //set value to random tensor of dimension 3
+  value = tf.randomNormal([28, 28, 4]) as Tensor<Rank.R3>;
 
   constructor(id: string) {
     super(id, false);
