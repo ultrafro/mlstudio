@@ -1,20 +1,30 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
-import { BlockClass } from "./BlockClass";
-import { BlockType } from "../model";
+import { BlockClass } from "../BlockClass";
+import { BlockType } from "../../model";
 
-export class ConstantBlock extends BlockClass {
-  type = BlockType.CONSTANT;
+export class InputBlock extends BlockClass {
+  type = BlockType.INPUT;
   value = tf.tensor1d([2]);
 
   constructor(id: string) {
     super(id, false);
-
-    this.viewables["|out0|"] = this.value.clone();
   }
 
   forward = (inputs: Tensor[]): Tensor => {
-    return this.value;
+    return inputs.length > 0 ? inputs[0] : this.value;
+  };
+
+  override getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
+    return inputs?.[0] ?? null;
+  };
+
+  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+    if (inputs == null) {
+      return true;
+    } else {
+      return inputs.length == 1;
+    }
   };
 
   override saveValue(value: Tensor) {

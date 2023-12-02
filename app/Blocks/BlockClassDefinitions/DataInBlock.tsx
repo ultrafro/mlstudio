@@ -1,8 +1,8 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
-import { BlockClass } from "./BlockClass";
-import { BlockType } from "../model";
-import { actualData } from "./ActualData";
+import { BlockClass } from "../BlockClass";
+import { BlockType } from "../../model";
+import { actualData } from "../ActualData";
 
 export class DataInBlock extends BlockClass {
   type = BlockType.DATA_IN;
@@ -20,6 +20,14 @@ export class DataInBlock extends BlockClass {
     } else {
       return this.value;
     }
+  };
+
+  override getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
+    return this.value.shape;
+  };
+
+  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+    return true;
   };
 
   override saveValue(value: Tensor) {

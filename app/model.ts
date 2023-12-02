@@ -1,15 +1,15 @@
 import { BlockClass } from "./Blocks/BlockClass";
-import { ConstantBlock } from "./Blocks/ConstantBlock";
-import { DataInBlock } from "./Blocks/DataInBlock";
-import { DataOutBlock } from "./Blocks/DataOutBlock";
-import { FinalLossBlock } from "./Blocks/FinalLossBlock";
-import { InputBlock } from "./Blocks/InputBlock";
-import { LinearBlock } from "./Blocks/LinearBlock";
-import { MultiplyBlock } from "./Blocks/MultiplyBlock";
-import { OutputBlock } from "./Blocks/OutputBlock";
-import { RandomNumbersBlock } from "./Blocks/RandomNumbersBlock";
-import { SquareLossBlock } from "./Blocks/SquareLossBlock";
-import { VariableBlock } from "./Blocks/VariableBlock";
+import { ConstantBlock } from "./Blocks/BlockClassDefinitions/ConstantBlock";
+import { DataInBlock } from "./Blocks/BlockClassDefinitions/DataInBlock";
+import { DataOutBlock } from "./Blocks/BlockClassDefinitions/DataOutBlock";
+import { FinalLossBlock } from "./Blocks/BlockClassDefinitions/FinalLossBlock";
+import { InputBlock } from "./Blocks/BlockClassDefinitions/InputBlock";
+import { LinearBlock } from "./Blocks/BlockClassDefinitions/LinearBlock";
+import { MultiplyBlock } from "./Blocks/BlockClassDefinitions/MultiplyBlock";
+import { OutputBlock } from "./Blocks/BlockClassDefinitions/OutputBlock";
+import { RandomNumbersBlock } from "./Blocks/BlockClassDefinitions/RandomNumbersBlock";
+import { SquareLossBlock } from "./Blocks/BlockClassDefinitions/SquareLossBlock";
+import { VariableBlock } from "./Blocks/BlockClassDefinitions/VariableBlock";
 import { SIMPLE_TRAINING_GRAPH } from "./Samples/SimpleTrainingGraph";
 import { BASIC_WORFKLOW_GRAPH } from "./Samples/BasicWorkflowGraph";
 
@@ -159,13 +159,15 @@ export type Network = {
   connections: Record<string, BlockConnection>;
 };
 
+export type BlockParams = Record<string, string | number | number[]>;
+
 export type BlockRecord = {
   id: string;
   type: BlockType;
   x: number;
   y: number;
   iterations?: number;
-  params?: Record<string, any>;
+  params?: BlockParams;
 };
 
 export type BlockConnection = {
@@ -184,23 +186,6 @@ export type StudioSession = {
 };
 
 export const DEFAULT_SESSION: StudioSession = {
-  // network: {
-  //   blocks: {
-  //     "|0|": {
-  //       id: "|0|",
-  //       type: BlockType.DATA,
-  //       x: 100,
-  //       y: 100,
-  //     },
-  //     "|1|": {
-  //       id: "|1|",
-  //       type: BlockType.LINEAR,
-  //       x: 400,
-  //       y: 100,
-  //     },
-  //   },
-  //   connections: {},
-  // },
   network: { ...BASIC_WORFKLOW_GRAPH } as any,
   visualizers: {},
   supervisedDataShape: {

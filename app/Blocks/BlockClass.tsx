@@ -1,6 +1,8 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor } from "@tensorflow/tfjs";
-import { BlockType } from "../model";
+import { BlockParams, BlockType } from "../model";
+import BlockEditor from "./BlockEditor";
+import { areParamsTheSame } from "../utils";
 
 export class BlockClass {
   loadFromStorage: boolean;
@@ -16,12 +18,43 @@ export class BlockClass {
 
   viewables: Record<string, Tensor> = {};
 
+  currentParams: BlockParams = {};
+
   constructor(id: string, loadFromStorage: boolean) {
     this.id = id;
     this.loadFromStorage = loadFromStorage;
   }
 
-  async initialize() {}
+  initialize() {}
+
+  getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
+    return null;
+  };
+
+  areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+    return true;
+  };
+
+  updateParams = (params?: BlockParams) => {
+    //do a diff between saved params and updated params
+    //if they are different, update the block
+    if (params) {
+      const keys = Object.keys(params);
+      if (keys.length !== Object.keys(this.currentParams).length) {
+        this.currentParams = params;
+        this.initialize();
+        return;
+      }
+
+      for (const key of keys) {
+        if (!areParamsTheSame(params[key], this.currentParams[key])) {
+          this.currentParams = params;
+          this.initialize();
+          return;
+        }
+      }
+    }
+  };
 
   forward = (inputs: Tensor[], sample?: boolean): Tensor => {
     return inputs[0];
@@ -51,4 +84,8 @@ export class BlockClass {
   }
 
   destroy() {}
+
+  render = () => {
+    return <BlockEditor />;
+  };
 }

@@ -1,5 +1,5 @@
-import { BlockType } from "../model";
-import { BlockClass } from "./BlockClass";
+import { BlockParams, BlockType } from "../../model";
+import { BlockClass } from "../BlockClass";
 
 export class LinearBlock extends BlockClass {
   type = BlockType.LINEAR;

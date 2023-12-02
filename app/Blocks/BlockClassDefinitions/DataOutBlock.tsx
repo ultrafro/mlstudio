@@ -1,8 +1,9 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
-import { BlockClass } from "./BlockClass";
-import { BlockType } from "../model";
-import { actualData } from "./ActualData";
+import { BlockClass } from "../BlockClass";
+import { BlockType } from "../../model";
+import { actualData } from "../ActualData";
+import { areParamsTheSame } from "@/app/utils";
 
 export class DataOutBlock extends BlockClass {
   type = BlockType.DATA_OUT;
@@ -18,6 +19,22 @@ export class DataOutBlock extends BlockClass {
     } else {
       return this.value;
     }
+  };
+
+  override getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
+    return inputs?.[0] ?? null;
+  };
+
+  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+    if (inputs.length != 1) {
+      return false;
+    }
+
+    if (inputs[0] == null) {
+      return false;
+    }
+
+    return areParamsTheSame(inputs[0], this.value.shape);
   };
 
   override saveValue(value: Tensor) {

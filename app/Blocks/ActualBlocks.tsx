@@ -193,6 +193,96 @@ function getSortedBlockIds(network: Network): string[] {
   return sortedIds;
 }
 
+export function getSortedBlockIdsUpToAndIncluding(
+  network: Network,
+  id: string
+): string[] {
+  const result: string[] = [];
+
+  const allSortedIds = getSortedBlockIds(network);
+
+  //find all ids that are ancestors of id
+  const ancestors: Record<string, boolean> = { [id]: true };
+  getAncestors(id, ancestors, network);
+
+  const acestorIdList = Object.keys(ancestors);
+
+  for (const sortedId of allSortedIds) {
+    if (acestorIdList.includes(sortedId)) {
+      result.push(sortedId);
+    }
+  }
+
+  return result;
+}
+
+export function getBrokenBlocksList(network: Network): string[] {
+  const brokenBlockList: string[] = [];
+
+  //evaluate every block to see if its inputs are correct
+  for (const block of Object.values(network.blocks)) {
+    const ancestors = getSortedBlockIdsUpToAndIncluding(network, block.id);
+
+    const blockStats: Record<
+      string,
+      { correct: boolean; outputShape: number[] | null }
+    > = {};
+
+    for (const ancestorId of ancestors) {
+      const ancestorBlock = network.blocks[ancestorId];
+      const actualBlock = ActualBlocks[ancestorId];
+      if (actualBlock) {
+        const inputBlocks: string[] = [];
+        for (const connectionId in network.connections) {
+          const connection = network.connections[connectionId];
+          if (connection.target == ancestorId) {
+            inputBlocks.push(connection.source);
+          }
+        }
+
+        const inputShapes: (number[] | null)[] = [];
+        for (const inputBlock of inputBlocks) {
+          const inputBlockStats = blockStats[inputBlock];
+          if (inputBlockStats) {
+            inputShapes.push(inputBlockStats.outputShape);
+          } else {
+            brokenBlockList.push(ancestorId);
+            break;
+          }
+        }
+
+        const correct = actualBlock.areInputsCorrect(inputShapes);
+
+        const outputShape = actualBlock.getOutputShape(inputShapes);
+
+        blockStats[ancestorId] = { correct, outputShape };
+      } else {
+        brokenBlockList.push(ancestorId);
+        break;
+      }
+    }
+  }
+
+  return brokenBlockList;
+}
+
+function getAncestors(
+  id: string,
+  ancestorHolder: Record<string, boolean>,
+  network: Network
+) {
+  const connections = Object.values(network.connections).filter(
+    (connection) => {
+      return connection.target == id;
+    }
+  );
+
+  for (const connection of connections) {
+    ancestorHolder[connection.source] = true;
+    getAncestors(connection.source, ancestorHolder, network);
+  }
+}
+
 function getNumberOfInputs(
   blockId: string,
   eligibleBlocks: string[],

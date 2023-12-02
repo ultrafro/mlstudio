@@ -1,7 +1,7 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
-import { BlockClass } from "./BlockClass";
-import { BlockType } from "../model";
+import { BlockClass } from "../BlockClass";
+import { BlockType } from "../../model";
 
 export class OutputBlock extends BlockClass {
   type = BlockType.OUTPUT;
