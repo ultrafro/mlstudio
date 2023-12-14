@@ -25,16 +25,38 @@ export class DataOutBlock extends BlockClass {
     return inputs?.[0] ?? null;
   };
 
-  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+  override areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
     if (inputs.length != 1) {
-      return false;
+      return {
+        correct: false,
+        reason:
+          "input to data out block must be 1, got: " +
+          inputs.length.toString() +
+          " inputs",
+      };
     }
 
     if (inputs[0] == null) {
-      return false;
+      return {
+        correct: false,
+        reason: "input to data-out block must be well-defined, got null",
+      };
     }
 
-    return areParamsTheSame(inputs[0], this.value.shape);
+    const paramsTheSame = areParamsTheSame(inputs[0], this.value.shape);
+    return {
+      correct: paramsTheSame,
+      reason: paramsTheSame
+        ? undefined
+        : "input to data-out block must be the same shape as the output of the model. Expected: " +
+          this.value.shape.toString() +
+          ", got: " +
+          inputs[0].toString() +
+          " and got: " +
+          inputs[0].toString(),
+    };
   };
 
   override saveValue(value: Tensor) {

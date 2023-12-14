@@ -14,12 +14,19 @@ export class FinalLossBlock extends BlockClass {
     return inputs?.[0] ?? null;
   };
 
-  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
-    if (inputs.length != 1) {
-      return false;
+  override areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
+    if (inputs.length != 1 || inputs[0] == null) {
+      return {
+        correct: false,
+        reason:
+          "inputs to final loss block must be 1 and well defined. Got length: " +
+          inputs.length.toString(),
+      };
     }
 
-    return true;
+    return { correct: true };
   };
 
   forward = (inputs: Tensor[]): Tensor => {

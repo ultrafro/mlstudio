@@ -26,8 +26,10 @@ export class DataInBlock extends BlockClass {
     return this.value.shape;
   };
 
-  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
-    return true;
+  override areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
+    return { correct: true };
   };
 
   override saveValue(value: Tensor) {

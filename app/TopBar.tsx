@@ -3,6 +3,7 @@ import { FlexCol, FlexRow, Icon } from "./Flex";
 import {
   ActualBlocks,
   forwardBlocks,
+  getBrokenBlocksList,
   initializeBlocks,
   trainBlocks,
 } from "./Blocks/ActualBlocks";
@@ -63,6 +64,15 @@ export default function TopBar(props: { openData: () => void }) {
           src="/icons/play.png"
           onClick={async () => {
             await initializeBlocks(session.session.network);
+
+            const result = getBrokenBlocksList(session.session.network);
+            console.log("broken blocks", result);
+
+            if (result.length > 0) {
+              console.log("found broken blocks! not going to train", result);
+              return;
+            }
+
             //forwardBlocks(session.session.network);
 
             //todo: make this find the "final loss" block, right now it's hard coded

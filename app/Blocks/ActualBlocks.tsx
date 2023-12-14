@@ -216,54 +216,141 @@ export function getSortedBlockIdsUpToAndIncluding(
   return result;
 }
 
-export function getBrokenBlocksList(network: Network): string[] {
-  const brokenBlockList: string[] = [];
+export function getBrokenBlocksList(
+  network: Network
+): { id: string; reason?: string }[] {
+  const brokenBlocks: { id: string; reason?: string }[] = [];
+  const blockStates: Record<
+    string,
+    { correct: boolean; outputShape: number[] | null; reason?: string }
+  > = {};
 
-  //evaluate every block to see if its inputs are correct
   for (const block of Object.values(network.blocks)) {
     const ancestors = getSortedBlockIdsUpToAndIncluding(network, block.id);
 
-    const blockStats: Record<
-      string,
-      { correct: boolean; outputShape: number[] | null }
-    > = {};
+    let correct = true;
+    let reason: string | undefined = undefined;
+    let outputShape: number[] | null = null;
 
     for (const ancestorId of ancestors) {
-      const ancestorBlock = network.blocks[ancestorId];
-      const actualBlock = ActualBlocks[ancestorId];
-      if (actualBlock) {
-        const inputBlocks: string[] = [];
-        for (const connectionId in network.connections) {
-          const connection = network.connections[connectionId];
-          if (connection.target == ancestorId) {
-            inputBlocks.push(connection.source);
-          }
+      const ancestorState = blockStates[ancestorId];
+      if (ancestorState) {
+        if (!ancestorState.correct) {
+          correct = false;
+          reason =
+            "ancestor: " +
+            ancestorId +
+            " is broken because: " +
+            ancestorState.reason;
+          break;
         }
-
-        const inputShapes: (number[] | null)[] = [];
-        for (const inputBlock of inputBlocks) {
-          const inputBlockStats = blockStats[inputBlock];
-          if (inputBlockStats) {
-            inputShapes.push(inputBlockStats.outputShape);
-          } else {
-            brokenBlockList.push(ancestorId);
-            break;
-          }
-        }
-
-        const correct = actualBlock.areInputsCorrect(inputShapes);
-
-        const outputShape = actualBlock.getOutputShape(inputShapes);
-
-        blockStats[ancestorId] = { correct, outputShape };
       } else {
-        brokenBlockList.push(ancestorId);
-        break;
+        const ancestorBlock = network.blocks[ancestorId];
+        const actualBlock = ActualBlocks[ancestorId];
+        if (actualBlock) {
+          const inputBlocks: string[] = getInputBlocks(ancestorId, network);
+
+          const inputShapes: (number[] | null)[] = [];
+          for (const inputBlock of inputBlocks) {
+            const inputBlockStats = blockStates[inputBlock];
+            if (inputBlockStats) {
+              inputShapes.push(inputBlockStats.outputShape);
+            }
+          }
+
+          const result = actualBlock.areInputsCorrect(inputShapes);
+          correct = result.correct;
+          reason = result.reason;
+
+          outputShape = actualBlock.getOutputShape(inputShapes);
+
+          blockStates[ancestorId] = { correct, outputShape, reason };
+        } else {
+          correct = false;
+          reason =
+            "ancestor: " +
+            ancestorId +
+            " is broken because actual block not found";
+          break;
+        }
       }
+    }
+
+    blockStates[block.id] = { correct, outputShape, reason };
+  }
+
+  for (const blockId in blockStates) {
+    const blockState = blockStates[blockId];
+    if (!blockState.correct) {
+      brokenBlocks.push({ id: blockId, reason: blockState.reason });
     }
   }
 
-  return brokenBlockList;
+  return brokenBlocks;
+
+  // const brokenBlockList: { id: string; reason?: string }[] = [];
+
+  // //evaluate every block to see if its inputs are correct
+  // for (const block of Object.values(network.blocks)) {
+  //   const ancestors = getSortedBlockIdsUpToAndIncluding(network, block.id);
+
+  //   const blockStats: Record<
+  //     string,
+  //     { correct: boolean; outputShape: number[] | null; reason?: string }
+  //   > = {};
+
+  //   for (const ancestorId of ancestors) {
+  //     const ancestorBlock = network.blocks[ancestorId];
+  //     const actualBlock = ActualBlocks[ancestorId];
+  //     if (actualBlock) {
+  //       const inputBlocks: string[] = getInputBlocks(ancestorId, network);
+
+  //       const inputShapes: (number[] | null)[] = [];
+  //       for (const inputBlock of inputBlocks) {
+  //         const inputBlockStats = blockStats[inputBlock];
+  //         if (inputBlockStats) {
+  //           inputShapes.push(inputBlockStats.outputShape);
+  //         } else {
+  //           brokenBlockList.push(ancestorId);
+  //           break;
+  //         }
+  //       }
+
+  //       const correct = actualBlock.areInputsCorrect(inputShapes);
+
+  //       const outputShape = actualBlock.getOutputShape(inputShapes);
+
+  //       blockStats[ancestorId] = {
+  //         correct: correct.correct,
+  //         outputShape,
+  //         reason: correct.reason,
+  //       };
+  //     } else {
+  //       blockStats[ancestorId] = {
+  //         correct: false,
+  //         outputShape: null,
+  //         reason: "actual block not found",
+  //       };
+  //       break;
+  //     }
+  //   }
+  // }
+
+  // for (const blockId in blockStats) {
+  // }
+
+  // return brokenBlockList;
+}
+
+function getInputBlocks(id: string, network: Network): string[] {
+  const result: string[] = [];
+  for (const connectionId in network.connections) {
+    const connection = network.connections[connectionId];
+    if (connection.target == id) {
+      result.push(connection.source);
+    }
+  }
+  return result;
 }
 
 function getAncestors(

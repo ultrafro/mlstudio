@@ -31,8 +31,10 @@ export class BlockClass {
     return null;
   };
 
-  areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
-    return true;
+  areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
+    return { correct: true };
   };
 
   updateParams = (params?: BlockParams) => {

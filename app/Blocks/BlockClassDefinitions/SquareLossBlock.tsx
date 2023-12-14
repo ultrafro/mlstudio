@@ -26,16 +26,35 @@ export class SquareLossBlock extends BlockClass {
     return [1];
   };
 
-  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+  override areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
     if (inputs.length != 2) {
-      return false;
+      return {
+        correct: false,
+        reason:
+          "inputs to square loss block must be 2, got: " +
+          inputs.length.toString(),
+      };
     }
 
     //if any is null, return false
     if (inputs[0] == null || inputs[1] == null) {
-      return false;
+      return {
+        correct: false,
+        reason: "inputs to square loss block must be well-defined, got null",
+      };
     }
 
-    return areParamsTheSame(inputs[0], inputs[1]);
+    const paramsTheSame = areParamsTheSame(inputs[0], inputs[1]);
+    return {
+      correct: paramsTheSame,
+      reason: paramsTheSame
+        ? undefined
+        : "inputs to square loss block must be the same shape. Got: " +
+          inputs[0].toString() +
+          " and got: " +
+          inputs[1].toString(),
+    };
   };
 }

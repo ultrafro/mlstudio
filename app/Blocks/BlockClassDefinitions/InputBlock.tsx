@@ -19,11 +19,20 @@ export class InputBlock extends BlockClass {
     return inputs?.[0] ?? null;
   };
 
-  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+  override areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
     if (inputs == null) {
-      return true;
+      return { correct: true };
     } else {
-      return inputs.length == 1;
+      const correct = inputs.length == 1 && inputs[0] != null;
+      return {
+        correct,
+        reason: correct
+          ? undefined
+          : "Input to input block must be 1 and well defined. Got length: " +
+            inputs.length.toString(),
+      };
     }
   };
 

@@ -35,20 +35,34 @@ export class MultiplyBlock extends BlockClass {
     return outputShape;
   };
 
-  override areInputsCorrect = (inputs: (number[] | null)[]): boolean => {
+  override areInputsCorrect = (
+    inputs: (number[] | null)[]
+  ): { correct: boolean; reason?: string } => {
     if (inputs.length != 2) {
-      return false;
+      return { correct: false, reason: "Multiply block must have 2 inputs" };
     }
 
     //if any is null, return false
     if (inputs[0] == null || inputs[1] == null) {
-      return false;
+      return {
+        correct: false,
+        reason: "Multiply block must have 2 defined inputs",
+      };
     }
 
     if (inputs[0][inputs[0].length - 1] != inputs[1][0]) {
-      return false;
+      return {
+        correct: false,
+        reason:
+          "Multiply block must have matching inner dimensions. Input 1 dimensions: " +
+          inputs[0].toString() +
+          ", input 2 dimensions: " +
+          inputs[1].toString() +
+          " input 2 dimensions: " +
+          inputs[1].toString(),
+      };
     }
 
-    return true;
+    return { correct: true };
   };
 }
