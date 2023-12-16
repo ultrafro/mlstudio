@@ -23,7 +23,7 @@ export class OutputBlock extends BlockClass {
       correct,
       reason: correct
         ? undefined
-        : "Input to input block must be 1 and well defined. Got length: " +
+        : "Input to block must be 1 and well defined. Got length: " +
           inputs.length.toString(),
     };
   };

@@ -238,7 +238,7 @@ export function getBrokenBlocksList(
         if (!ancestorState.correct) {
           correct = false;
           reason =
-            "ancestor: " +
+            (block.id == ancestorId ? "" : "ancestor: ") +
             ancestorId +
             " is broken because: " +
             ancestorState.reason;
@@ -267,10 +267,7 @@ export function getBrokenBlocksList(
           blockStates[ancestorId] = { correct, outputShape, reason };
         } else {
           correct = false;
-          reason =
-            "ancestor: " +
-            ancestorId +
-            " is broken because actual block not found";
+          reason = ancestorId + " is broken because actual block not found";
           break;
         }
       }

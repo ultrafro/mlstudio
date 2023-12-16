@@ -17,12 +17,20 @@ export class FinalLossBlock extends BlockClass {
   override areInputsCorrect = (
     inputs: (number[] | null)[]
   ): { correct: boolean; reason?: string } => {
-    if (inputs.length != 1 || inputs[0] == null) {
+    if (inputs.length != 1) {
       return {
         correct: false,
         reason:
           "inputs to final loss block must be 1 and well defined. Got length: " +
           inputs.length.toString(),
+      };
+    }
+
+    if (inputs[0] == null) {
+      return {
+        correct: false,
+        reason:
+          "inputs to final loss block must be well-defined, got null, likely do to something broken earlier in the chain",
       };
     }
 

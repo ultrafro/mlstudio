@@ -39,6 +39,7 @@ import { ActualBlocks, tensorflowTest3 } from "../Blocks/ActualBlocks";
 import { Blocks } from "../model";
 import SelectedGraph from "./SelectedGraph";
 import { useInitializeBlocks } from "../utils";
+import ErrorDisplay from "./ErrorDisplay";
 
 const initialNodes = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
@@ -297,6 +298,7 @@ export default function GraphDisplay() {
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
       </ReactFlow>
       <SelectedGraph />
+      <ErrorDisplay />
     </FlexCol>
   );
 }
