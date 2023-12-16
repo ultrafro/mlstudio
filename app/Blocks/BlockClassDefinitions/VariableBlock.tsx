@@ -15,6 +15,7 @@ export class VariableBlock extends BlockClass {
   }
 
   override initialize = (): void => {
+    this.variable.dispose();
     const size = this.currentParams["shape"] as number[];
     if (!size) {
       this.variable = tf.variable(tf.tensor1d([Math.random()]), true, this.id);
@@ -28,7 +29,7 @@ export class VariableBlock extends BlockClass {
   };
 
   override getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
-    return this.value?.shape ?? null;
+    return this.variable?.shape ?? null;
   };
 
   override areInputsCorrect = (

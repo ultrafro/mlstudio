@@ -22,6 +22,9 @@ export function useInitializeBlocks() {
   useEffect(() => {
     if (session.session.network && !initialized) {
       setInitialized(true);
+    }
+
+    if (session.session.network) {
       initializeBlocks(session.session.network);
     }
 

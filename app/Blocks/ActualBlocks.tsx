@@ -34,10 +34,9 @@ export async function initializeBlocks(network: Network, clear?: boolean) {
     if (!alreadyStoredKeys.includes(blockDef.id)) {
       const classDef = Blocks[blockDef.type].classDef;
       const blockClass = new classDef(blockDef.id, !!clear);
+      ActualBlocks[blockDef.id] = blockClass;
 
       await blockClass.initialize();
-
-      ActualBlocks[blockDef.id] = blockClass;
     }
   }
 }
