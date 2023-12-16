@@ -1,7 +1,8 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
 import { BlockClass } from "../BlockClass";
-import { BlockType } from "../../model";
+import { BlockParams, BlockType } from "../../model";
+import VariableBlockEditor from "../BlockEditors/VariableBlockEditor";
 
 export class VariableBlock extends BlockClass {
   type = BlockType.VARIABLE;
@@ -14,7 +15,7 @@ export class VariableBlock extends BlockClass {
     this.variable = tf.variable(tf.tensor1d([Math.random()]), true, id);
   }
 
-  override initialize = (): void => {
+  override initialize = (params?: BlockParams): void => {
     this.variable.dispose();
     const size = this.currentParams["shape"] as number[];
     if (!size) {
@@ -54,4 +55,8 @@ export class VariableBlock extends BlockClass {
   override getGrads(): Tensor | null {
     return this.grads ?? null;
   }
+
+  override render = () => {
+    return <VariableBlockEditor id={this.id} />;
+  };
 }

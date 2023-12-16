@@ -25,7 +25,7 @@ export class BlockClass {
     this.loadFromStorage = loadFromStorage;
   }
 
-  initialize() {}
+  initialize(params?: BlockParams) {}
 
   getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
     return null;

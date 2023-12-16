@@ -1,7 +1,7 @@
 import * as tf from "@tensorflow/tfjs";
 import { Tensor } from "@tensorflow/tfjs";
 import { BlockClass } from "../BlockClass";
-import { BlockType } from "../../model";
+import { BlockParams, BlockRecord, BlockType } from "../../model";
 export class RandomNumbersBlock extends BlockClass {
   type = BlockType.RANDOM_NUMBERS;
   value = tf.randomUniform([1, 2], 0, 1);
@@ -10,7 +10,7 @@ export class RandomNumbersBlock extends BlockClass {
     super(id, false);
   }
 
-  override initialize = (): void => {
+  override initialize = (params?: BlockParams): void => {
     const size = this.currentParams["shape"] as number[];
     if (!size) {
       this.value = tf.randomUniform([1, 2], 0, 1);

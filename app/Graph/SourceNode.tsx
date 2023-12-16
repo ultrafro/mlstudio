@@ -2,9 +2,11 @@ import { CSSProperties, memo, useCallback, useContext } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import { MIDDLE_HANDLE_HEIGHT, NODE_WIDTH } from "./GraphNodeConstants";
 import { SessionProivder } from "../Providers";
+import { ActualBlocks } from "../Blocks/ActualBlocks";
 
 function SourceNode(props: NodeProps) {
   const session = useContext(SessionProivder);
+  const block = ActualBlocks[props.id];
 
   const baseStyle = {
     padding: 10,
@@ -30,6 +32,7 @@ function SourceNode(props: NodeProps) {
         }}
       />
       {props.data?.label}
+      {block && block.render()}
     </div>
   );
 }

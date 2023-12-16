@@ -36,7 +36,7 @@ export async function initializeBlocks(network: Network, clear?: boolean) {
       const blockClass = new classDef(blockDef.id, !!clear);
       ActualBlocks[blockDef.id] = blockClass;
 
-      await blockClass.initialize();
+      await blockClass.initialize(blockDef.params);
     }
   }
 }
