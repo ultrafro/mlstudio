@@ -100,6 +100,26 @@ export default function SelectedGraph() {
         <div>Variance: {variance.toFixed(2)}</div>
         <div>total size: {dataAsNumberArray.length}</div>
       </FlexRow>
+
+      {/* a close button on the top left */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      >
+        <button
+          onClick={() => {
+            //set selected to id in session
+            const newSession = { ...session.session };
+            newSession.selectedBlockId = "";
+            session.setSession(newSession);
+          }}
+        >
+          <img src="https://img.icons8.com/material-outlined/24/000000/close-window.png" />
+        </button>
+      </div>
     </FlexCol>
   );
 }

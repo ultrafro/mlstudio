@@ -1,8 +1,9 @@
 import { CSSProperties, memo, useCallback, useContext } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
-import { MIDDLE_HANDLE_HEIGHT, NODE_WIDTH } from "./GraphNodeConstants";
-import { SessionProivder } from "../Providers";
-import { ActualBlocks } from "../Blocks/ActualBlocks";
+import { MIDDLE_HANDLE_HEIGHT, NODE_WIDTH } from "../GraphNodeConstants";
+import { SessionProivder } from "../../Providers";
+import { ActualBlocks } from "../../Blocks/ActualBlocks";
+import ViewButton from "../ViewButton";
 
 function TargetNode(props: NodeProps) {
   const session = useContext(SessionProivder);
@@ -31,6 +32,7 @@ function TargetNode(props: NodeProps) {
           background: "#555",
         }}
       />
+      <ViewButton id={props.id} />
       {props.data?.label}
       {block && block.render()}
     </div>

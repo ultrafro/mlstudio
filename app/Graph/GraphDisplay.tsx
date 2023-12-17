@@ -31,10 +31,10 @@ import {
 } from "./GraphHooks";
 import "./reactFlowOverrides.css";
 import { nanoid } from "nanoid";
-import SourceNode from "./SourceNode";
-import TargetNode from "./TargetNode";
-import UnaryNode from "./UnaryNode";
-import BinaryNode from "./BinaryNode";
+import SourceNode from "./Nodes/SourceNode";
+import TargetNode from "./Nodes/TargetNode";
+import UnaryNode from "./Nodes/UnaryNode";
+import BinaryNode from "./Nodes/BinaryNode";
 import { ActualBlocks, tensorflowTest3 } from "../Blocks/ActualBlocks";
 import { Blocks } from "../model";
 import SelectedGraph from "./SelectedGraph";
@@ -87,28 +87,28 @@ export default function GraphDisplay() {
     [setEdges]
   );
 
-  useOnSelectionChange({
-    onChange: ({ nodes, edges }) => {
-      const newSelectedBlockId = nodes.length == 1 ? nodes[0].id : "";
+  // useOnSelectionChange({
+  //   onChange: ({ nodes, edges }) => {
+  //     const newSelectedBlockId = nodes.length == 1 ? nodes[0].id : "";
 
-      if (newSelectedBlockId != session.session.selectedBlockId) {
-        session.setSession({
-          ...session.session,
-          selectedBlockId: newSelectedBlockId,
-        });
-      } else {
-        if (!!session.session.selectedBlockId) {
-          session.setSession({
-            ...session.session,
-            selectedBlockId: "",
-          });
-        }
-      }
+  //     if (newSelectedBlockId != session.session.selectedBlockId) {
+  //       session.setSession({
+  //         ...session.session,
+  //         selectedBlockId: newSelectedBlockId,
+  //       });
+  //     } else {
+  //       if (!!session.session.selectedBlockId) {
+  //         session.setSession({
+  //           ...session.session,
+  //           selectedBlockId: "",
+  //         });
+  //       }
+  //     }
 
-      // setSelectedNodes(nodes.map((node) => node.id));
-      // setSelectedEdges(edges.map((edge) => edge.id));
-    },
-  });
+  //     // setSelectedNodes(nodes.map((node) => node.id));
+  //     // setSelectedEdges(edges.map((edge) => edge.id));
+  //   },
+  // });
 
   const onNodesDelete = useCallback(
     (deleted: any) => {
