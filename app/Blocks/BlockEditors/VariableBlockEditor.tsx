@@ -13,39 +13,10 @@ export default function VariableBlockEditor({ id }: { id: string }) {
 
   const [regular, setRegular] = useState<number>(0);
 
-  console.log("render variable block editor: " + id);
-
   return (
     <FlexCol>
       <div>Variable</div>
       <div>Shape: {shape?.toString()}</div>
-
-      {/* mantine number input */}
-      {/* <NumberInput
-        value={regular}
-        onChange={(val) => {
-          if (typeof val == "number") {
-            setRegular(val);
-          }
-        }}
-      /> */}
-
-      {/* <input
-        type="number"
-        ref={ref1}
-        value={regular}
-        onChange={(evt) => {
-          setRegular(parseInt(evt.target.value));
-        }}
-      /> */}
-
-      {/* <button
-        onClick={() => {
-          setRegular(Math.random());
-        }}
-      >
-        Randomize
-      </button> */}
 
       {/* a number input for picking dimension size */}
       <NumberInput
@@ -53,7 +24,11 @@ export default function VariableBlockEditor({ id }: { id: string }) {
         value={shape?.length ?? 0}
         onChange={(newVal) => {
           const newDimensionality = Math.max(
-            typeof newVal == "number" ? newVal : parseInt(newVal),
+            typeof newVal == "number"
+              ? isNaN(newVal)
+                ? 1
+                : newVal
+              : parseInt(newVal),
             1
           );
           if ((shape?.length ?? 0) != newDimensionality) {
@@ -81,7 +56,7 @@ export default function VariableBlockEditor({ id }: { id: string }) {
               value={dimSize}
               onChange={(nv) => {
                 const newVal = Math.max(
-                  typeof nv == "number" ? nv : parseInt(nv),
+                  typeof nv == "number" ? (isNaN(nv) ? 1 : nv) : parseInt(nv),
                   1
                 );
 

@@ -2,7 +2,7 @@ import * as tf from "@tensorflow/tfjs";
 import { Tensor, Rank } from "@tensorflow/tfjs";
 import { BlockClass } from "../BlockClass";
 import { BlockType } from "../../model";
-import { areParamsTheSame } from "@/app/utils";
+import { areParamsTheSame, squeezeDims } from "@/app/utils";
 
 export class SquareLossBlock extends BlockClass {
   type = BlockType.SQUARE_LOSS;
@@ -46,7 +46,14 @@ export class SquareLossBlock extends BlockClass {
       };
     }
 
-    const paramsTheSame = areParamsTheSame(inputs[0], inputs[1]);
+    const squeezedFirstInput = squeezeDims(inputs[0]);
+
+    const squeezedSecondInput = squeezeDims(inputs[1]);
+
+    const paramsTheSame = areParamsTheSame(
+      squeezedFirstInput,
+      squeezedSecondInput
+    );
     return {
       correct: paramsTheSame,
       reason: paramsTheSame

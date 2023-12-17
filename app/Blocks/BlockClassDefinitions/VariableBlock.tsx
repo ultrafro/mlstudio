@@ -7,11 +7,13 @@ import VariableBlockEditor from "../BlockEditors/VariableBlockEditor";
 export class VariableBlock extends BlockClass {
   type = BlockType.VARIABLE;
 
-  variable = tf.variable(tf.tensor1d([Math.random()]), true, "a");
+  variable = tf.variable(tf.tensor1d([Math.random()]), true);
 
   constructor(id: string) {
     super(id, false);
+    this.variable.dispose();
 
+    console.log("SETTING UP VARIABLE: " + id);
     this.variable = tf.variable(tf.tensor1d([Math.random()]), true, id);
   }
 

@@ -12,6 +12,9 @@ import { SquareLossBlock } from "./Blocks/BlockClassDefinitions/SquareLossBlock"
 import { VariableBlock } from "./Blocks/BlockClassDefinitions/VariableBlock";
 import { SIMPLE_TRAINING_GRAPH } from "./Samples/SimpleTrainingGraph";
 import { BASIC_WORFKLOW_GRAPH } from "./Samples/BasicWorkflowGraph";
+import { AddBlock } from "./Blocks/BlockClassDefinitions/AddBlock";
+import { TanhBlock } from "./Blocks/BlockClassDefinitions/TanhBlock";
+import { VectorizeBlock } from "./Blocks/BlockClassDefinitions/VectorizeBlock";
 
 export type block = {
   name: string;
@@ -44,10 +47,12 @@ export enum BlockType {
   CROSS_ENTROPY = "CROSS_ENTROPY",
   RANDOM_NUMBERS = "RANDOM_NUMBERS",
   MULTIPLY = "MULTIPLY",
+  ADD = "ADD",
   VARIABLE = "VARIABLE",
   CONSTANT = "CONSTANT",
   SQUARE_LOSS = "SQUARE_LOSS",
   FINAL_LOSS = "FINAL_LOSS",
+  VECTORIZE = "VECTORIZE",
 }
 
 export const Blocks: Record<BlockType, BlockDefinition> = {
@@ -98,6 +103,12 @@ export const Blocks: Record<BlockType, BlockDefinition> = {
     classDef: MultiplyBlock,
     nodeType: "binary",
   },
+  [BlockType.ADD]: {
+    name: "Add",
+    icon: "icons/data.png",
+    classDef: AddBlock,
+    nodeType: "binary",
+  },
   [BlockType.VARIABLE]: {
     name: "Variable",
     icon: "icons/data.png",
@@ -125,7 +136,7 @@ export const Blocks: Record<BlockType, BlockDefinition> = {
   [BlockType.TANH]: {
     name: "Tanh",
     icon: "icons/tanh.png",
-    classDef: BlockClass,
+    classDef: TanhBlock,
     nodeType: "unary",
   },
   [BlockType.CROSS_ENTROPY]: {
@@ -139,6 +150,12 @@ export const Blocks: Record<BlockType, BlockDefinition> = {
     icon: "icons/square_loss.png",
     classDef: SquareLossBlock,
     nodeType: "binary",
+  },
+  [BlockType.VECTORIZE]: {
+    name: "Vectorize",
+    icon: "icons/vectorize.png",
+    classDef: VectorizeBlock,
+    nodeType: "unary",
   },
 };
 

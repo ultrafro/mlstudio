@@ -7,22 +7,23 @@ import { areParamsTheSame } from "@/app/utils";
 
 export class DataOutBlock extends BlockClass {
   type = BlockType.DATA_OUT;
-  value = tf.tensor1d([2]);
+  // value = tf.tensor1d([2]);
 
   constructor(id: string) {
     super(id, false);
   }
 
   forward = (inputs: Tensor[], sample?: boolean): Tensor => {
-    if (sample) {
-      return actualData.getCurrentSample().output;
-    } else {
-      return this.value;
-    }
+    return actualData.getCurrentSample().output;
+    // if (sample) {
+    //   return actualData.getCurrentSample().output;
+    // } else {
+    //   return this.value;
+    // }
   };
 
   override getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
-    return this.value.shape;
+    return actualData.getCurrentSample().output.shape;
     // return inputs?.[0] ?? null;
   };
 
@@ -42,7 +43,8 @@ export class DataOutBlock extends BlockClass {
 
   //some blocks, like multiply, don't have state
   override getValue(): Tensor | null {
-    return this.value ?? null;
+    //return this.value ?? null;
+    return actualData.getCurrentSample().output;
   }
 
   override getGrads(): Tensor | null {

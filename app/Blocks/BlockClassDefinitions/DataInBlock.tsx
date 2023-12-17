@@ -8,22 +8,23 @@ export class DataInBlock extends BlockClass {
   type = BlockType.DATA_IN;
 
   //set value to random tensor of dimension 3
-  value = tf.randomNormal([28, 28, 4]) as Tensor<Rank.R3>;
+  // value = tf.randomNormal([28, 28, 4]) as Tensor<Rank.R3>;
 
   constructor(id: string) {
     super(id, false);
   }
 
   forward = (inputs: Tensor[], sample?: boolean): Tensor => {
-    if (sample) {
-      return actualData.getCurrentSample().input;
-    } else {
-      return this.value;
-    }
+    return actualData.getCurrentSample().input;
+    // if (sample) {
+    //   return actualData.getCurrentSample().input;
+    // } else {
+    //   return this.value;
+    // }
   };
 
   override getOutputShape = (inputs: (number[] | null)[]): number[] | null => {
-    return this.value.shape;
+    return actualData.getCurrentSample().input.shape;
   };
 
   override areInputsCorrect = (
@@ -42,7 +43,8 @@ export class DataInBlock extends BlockClass {
 
   //some blocks, like multiply, don't have state
   override getValue(): Tensor | null {
-    return this.value ?? null;
+    return actualData.getCurrentSample().input;
+    // return this.value ?? null;
   }
 
   override getGrads(): Tensor | null {

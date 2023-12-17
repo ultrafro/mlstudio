@@ -71,3 +71,15 @@ export function areParamsTheSame(
 
   return false;
 }
+
+export function squeezeDims(dims: number[]): number[] {
+  const result: number[] = [];
+
+  for (const dim of dims) {
+    if (dim != 1) {
+      result.push(dim);
+    }
+  }
+
+  return result;
+}

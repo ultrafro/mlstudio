@@ -36,7 +36,7 @@ export async function initializeBlocks(network: Network, clear?: boolean) {
       const blockClass = new classDef(blockDef.id, !!clear);
       ActualBlocks[blockDef.id] = blockClass;
 
-      await blockClass.initialize(blockDef.params);
+      blockClass.initialize(blockDef.params);
     }
   }
 }
@@ -339,14 +339,24 @@ export function getBrokenBlocksList(
 }
 
 function getInputBlocks(id: string, network: Network): string[] {
-  const result: string[] = [];
+  const result: { id: string; handleId: string }[] = [];
+
   for (const connectionId in network.connections) {
     const connection = network.connections[connectionId];
     if (connection.target == id) {
-      result.push(connection.source);
+      result.push({ id: connection.source, handleId: connection.sourceHandle });
     }
   }
-  return result;
+
+  //sort by handleId
+  result.sort((a, b) => {
+    return a.handleId.localeCompare(b.handleId);
+  });
+
+  //remove handleId
+  return result.map((item) => {
+    return item.id;
+  });
 }
 
 function getAncestors(

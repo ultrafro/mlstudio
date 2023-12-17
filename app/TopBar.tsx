@@ -9,6 +9,7 @@ import {
 } from "./Blocks/ActualBlocks";
 import { useContext } from "react";
 import { SessionProivder } from "./Providers";
+import { BlockType } from "./model";
 
 export default function TopBar(props: { openData: () => void }) {
   const session = useContext(SessionProivder);
@@ -75,10 +76,18 @@ export default function TopBar(props: { openData: () => void }) {
             //todo: make this find the "final loss" block, right now it's hard coded
             trainBlocks("|7|", session.session.network, {}, 1);
 
-            //print the value of the "|2|" block
-            const variableBlock = ActualBlocks["|2|"];
-            console.log("variable value: " + variableBlock.getValue());
-            console.log("variable grad: " + variableBlock.getGrads());
+            //find any variable blocks and print them out
+            for (const block of Object.values(ActualBlocks)) {
+              if (block.type == BlockType.VARIABLE) {
+                console.log("variable value: " + block.getValue());
+                console.log("variable grda: " + block.getValue());
+              }
+            }
+
+            // //print the value of the "|2|" block
+            // const variableBlock = ActualBlocks["|2|"];
+            // console.log("variable value: " + variableBlock.getValue());
+            // console.log("variable grad: " + variableBlock.getGrads());
 
             session.setSession({ ...session.session, blocksChanged: {} });
           }}
