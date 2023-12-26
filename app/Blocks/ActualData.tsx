@@ -43,10 +43,11 @@ class ActualData {
       const labels = this.output as number[];
 
       const imgTensor = tf.browser.fromPixels(imageData, 1);
+      const scaledImageTensor = tf.mul(imgTensor, tf.scalar(1 / 255));
 
       const labelTensor = tf.tensor1d(labels);
 
-      this.inputTensor = imgTensor;
+      this.inputTensor = scaledImageTensor;
       this.outputTensor = labelTensor;
     }
   }

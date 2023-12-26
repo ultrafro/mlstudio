@@ -22,7 +22,7 @@ export class MultiplyBlock extends BlockClass {
     }
 
     if (b.shape.length == 1) {
-      finalB = tf.reshape(b, [1, b.shape[0]]);
+      finalB = tf.reshape(b, [b.shape[0], 1]);
     }
 
     const output = tf.matMul(finalA, finalB);

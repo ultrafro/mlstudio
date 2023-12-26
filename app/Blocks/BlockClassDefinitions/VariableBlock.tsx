@@ -18,12 +18,21 @@ export class VariableBlock extends BlockClass {
   }
 
   override initialize = (params?: BlockParams): void => {
+    const initialScale = 0.01;
     this.variable.dispose();
     const size = this.currentParams["shape"] as number[];
     if (!size) {
-      this.variable = tf.variable(tf.tensor1d([Math.random()]), true, this.id);
+      this.variable = tf.variable(
+        tf.tensor1d([Math.random() * initialScale]),
+        true,
+        this.id
+      );
     } else {
-      this.variable = tf.variable(tf.randomNormal(size as any), true, this.id);
+      this.variable = tf.variable(
+        tf.mul(tf.randomNormal(size as any), tf.scalar(initialScale)),
+        true,
+        this.id
+      );
     }
   };
 
