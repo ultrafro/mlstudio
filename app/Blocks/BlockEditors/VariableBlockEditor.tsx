@@ -7,7 +7,7 @@ export default function VariableBlockEditor({ id }: { id: string }) {
   const session = useContext(SessionProivder);
 
   const block = session.session.network.blocks[id];
-  const shape: number[] | undefined = block.params?.shape as
+  const shape: number[] | undefined = block?.params?.shape as
     | number[]
     | undefined;
 
@@ -34,7 +34,7 @@ export default function VariableBlockEditor({ id }: { id: string }) {
           if ((shape?.length ?? 0) != newDimensionality) {
             const newShape = new Array(newDimensionality).fill(1);
 
-            const newBlockParams = { ...block.params, shape: newShape };
+            const newBlockParams = { ...block?.params, shape: newShape };
 
             const newSession = { ...session.session };
             newSession.network.blocks[id] = {
@@ -78,7 +78,7 @@ export default function VariableBlockEditor({ id }: { id: string }) {
                 const newSession = { ...session.session };
                 newSession.network.blocks[id] = {
                   ...newSession.network.blocks[id],
-                  params: { ...block.params, shape: newShape },
+                  params: { ...block?.params, shape: newShape },
                 };
 
                 session.setSession(newSession);

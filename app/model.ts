@@ -15,6 +15,8 @@ import { BASIC_WORFKLOW_GRAPH } from "./Samples/BasicWorkflowGraph";
 import { AddBlock } from "./Blocks/BlockClassDefinitions/AddBlock";
 import { TanhBlock } from "./Blocks/BlockClassDefinitions/TanhBlock";
 import { VectorizeBlock } from "./Blocks/BlockClassDefinitions/VectorizeBlock";
+import * as tf from "@tensorflow/tfjs";
+import { SIMPLE_MULTIPLY_LEARNING_GRAPH } from "./Samples/SimpleMultiplyLearningGraph";
 
 export type block = {
   name: string;
@@ -168,6 +170,7 @@ export type SupervisedDataShape = {
   trainProportion: number;
   valProportion: number;
   testProportion: number;
+  customFunction?: (input: tf.Tensor) => tf.Tensor;
   fetchScript?: string;
 };
 
@@ -203,17 +206,32 @@ export type StudioSession = {
 };
 
 export const DEFAULT_SESSION: StudioSession = {
-  network: { ...BASIC_WORFKLOW_GRAPH } as any,
+  //network: { ...BASIC_WORFKLOW_GRAPH } as any,
+  network: { ...SIMPLE_MULTIPLY_LEARNING_GRAPH } as any,
   visualizers: {},
+  // supervisedDataShape: {
+  //   inputDimensions: [28, 28],
+  //   outputDimensions: [10],
+  //   srcType: "MNIST",
+  //   inputType: "image",
+  //   outputType: "numbers",
+  //   trainProportion: 0.8,
+  //   valProportion: 0.1,
+  //   testProportion: 0.1,
+  // },
   supervisedDataShape: {
-    inputDimensions: [28, 28],
-    outputDimensions: [10],
-    srcType: "MNIST",
-    inputType: "image",
+    inputDimensions: [1],
+    outputDimensions: [1],
+    srcType: "CUSTOM",
+    inputType: "numbers",
     outputType: "numbers",
     trainProportion: 0.8,
     valProportion: 0.1,
     testProportion: 0.1,
+    customFunction: (input: tf.Tensor) => {
+      const output = tf.mul(input, tf.scalar(2));
+      return output;
+    },
   },
 };
 

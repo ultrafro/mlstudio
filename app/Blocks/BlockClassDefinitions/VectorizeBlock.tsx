@@ -20,7 +20,7 @@ export class VectorizeBlock extends BlockClass {
       size *= dim;
     }
 
-    const output = tf.reshape(firstInput, [size, 1]);
+    const output = tf.reshape(firstInput, [size]);
 
     return output;
   };

@@ -13,7 +13,19 @@ export class MultiplyBlock extends BlockClass {
   forward = (inputs: Tensor[]): Tensor => {
     const a = inputs[0];
     const b = inputs[1];
-    const output = tf.matMul(a, b);
+
+    let finalA = a;
+    let finalB = b;
+
+    if (a.shape.length == 1) {
+      finalA = tf.reshape(a, [a.shape[0], 1]);
+    }
+
+    if (b.shape.length == 1) {
+      finalB = tf.reshape(b, [1, b.shape[0]]);
+    }
+
+    const output = tf.matMul(finalA, finalB);
 
     return output;
   };

@@ -13,15 +13,27 @@ class ActualData {
 
   setSupervisedDataShape(shape: SupervisedDataShape) {
     this.supervisedDataShape = shape;
-    mnistSampler.setProportions(
-      shape.trainProportion,
-      shape.valProportion,
-      shape.testProportion
-    );
+    if (shape.srcType == "MNIST") {
+      mnistSampler.setProportions(
+        shape.trainProportion,
+        shape.valProportion,
+        shape.testProportion
+      );
+    }
+
     this.newSample();
   }
 
   newSample() {
+    if (this.supervisedDataShape?.srcType == "MNIST") {
+      this.newSampleMNIST();
+    }
+    if (this.supervisedDataShape?.srcType == "CUSTOM") {
+      this.newSampleCustom();
+    }
+  }
+
+  newSampleMNIST() {
     const result = mnistSampler.getSample("train");
     if (result) {
       this.input = result.img;
@@ -30,30 +42,23 @@ class ActualData {
       const imageData = this.input as ImageData;
       const labels = this.output as number[];
 
-      // const img = new ImageData(28, 28);
-
-      // for (let xx = 0; xx < 28; xx++) {
-      //   for (let yy = 0; yy < 28; yy++) {
-      //     const idx = xx + yy * 28;
-      //     const r = imageData.data[idx * 4 + 0];
-      //     const g = imageData.data[idx * 4 + 1];
-      //     const b = imageData.data[idx * 4 + 2];
-      //     const a = imageData.data[idx * 4 + 3];
-      //     const avg = (r + g + b) / 3;
-
-      //     img.data[idx] = avg;
-      //   }
-      // }
-
       const imgTensor = tf.browser.fromPixels(imageData, 1);
-      //only slice the r channel of imgTensor
-      //imgTensor.slice([0,0], [1]);
 
       const labelTensor = tf.tensor1d(labels);
 
       this.inputTensor = imgTensor;
       this.outputTensor = labelTensor;
     }
+  }
+
+  newSampleCustom() {
+    this.inputTensor = tf.randomNormal(
+      this.supervisedDataShape?.inputDimensions || [1]
+    );
+
+    this.outputTensor =
+      this.supervisedDataShape?.customFunction?.(this.inputTensor) ??
+      tf.zeros(this.supervisedDataShape?.outputDimensions || [1]);
   }
 
   getCurrentSample(): { input: tf.Tensor; output: tf.Tensor } {
