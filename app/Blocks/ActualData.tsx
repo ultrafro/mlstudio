@@ -30,24 +30,24 @@ class ActualData {
       const imageData = this.input as ImageData;
       const labels = this.output as number[];
 
-      const img = new ImageData(28, 28);
+      // const img = new ImageData(28, 28);
 
-      for (let xx = 0; xx < 28; xx++) {
-        for (let yy = 0; yy < 28; yy++) {
-          const idx = xx + yy * 28;
-          const r = imageData.data[idx * 4 + 0];
-          const g = imageData.data[idx * 4 + 1];
-          const b = imageData.data[idx * 4 + 2];
-          const a = imageData.data[idx * 4 + 3];
-          const avg = (r + g + b) / 3;
+      // for (let xx = 0; xx < 28; xx++) {
+      //   for (let yy = 0; yy < 28; yy++) {
+      //     const idx = xx + yy * 28;
+      //     const r = imageData.data[idx * 4 + 0];
+      //     const g = imageData.data[idx * 4 + 1];
+      //     const b = imageData.data[idx * 4 + 2];
+      //     const a = imageData.data[idx * 4 + 3];
+      //     const avg = (r + g + b) / 3;
 
-          img.data[idx] = avg;
-        }
-      }
+      //     img.data[idx] = avg;
+      //   }
+      // }
 
-      const imgTensor = tf.browser.fromPixels(img, 1);
+      const imgTensor = tf.browser.fromPixels(imageData, 1);
       //only slice the r channel of imgTensor
-      imgTensor.slice([0], [1]);
+      //imgTensor.slice([0,0], [1]);
 
       const labelTensor = tf.tensor1d(labels);
 
