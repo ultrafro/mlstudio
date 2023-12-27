@@ -3,8 +3,8 @@ export const BASIC_WORFKLOW_GRAPH = {
     "|FinalLoss|": {
       id: "|FinalLoss|",
       type: "FINAL_LOSS",
-      x: 2530.594526358438,
-      y: 628.1780643546047,
+      x: 3021.686693907807,
+      y: 626.6623477880944,
     },
     "|INPUT|": {
       id: "|INPUT|",
@@ -15,8 +15,8 @@ export const BASIC_WORFKLOW_GRAPH = {
     "|OUTPUT|": {
       id: "|OUTPUT|",
       type: "OUTPUT",
-      x: 2077.2259920135575,
-      y: 748.0326175293426,
+      x: 2568.318159562926,
+      y: 746.5169009628323,
     },
     "|DATA_IN|": {
       id: "|DATA_IN|",
@@ -27,8 +27,8 @@ export const BASIC_WORFKLOW_GRAPH = {
     "|DATA_OUT|": {
       id: "|DATA_OUT|",
       type: "DATA_OUT",
-      x: 2080.497896845601,
-      y: 484.1722332108077,
+      x: 2571.59006439497,
+      y: 482.6565166442974,
     },
     "|2jOIsySECbTbKTd7aOqkK|": {
       id: "|2jOIsySECbTbKTd7aOqkK|",
@@ -75,8 +75,14 @@ export const BASIC_WORFKLOW_GRAPH = {
     "|h3ENqtt7JAPa0kCJ29GpD|": {
       id: "|h3ENqtt7JAPa0kCJ29GpD|",
       type: "SQUARE_LOSS",
-      x: 2315.9602905215806,
-      y: 629.5512307864483,
+      x: 2807.0524580709493,
+      y: 628.035514219938,
+    },
+    "|aI9rb-9ymAuk2kIJ1Z_DD|": {
+      id: "|aI9rb-9ymAuk2kIJ1Z_DD|",
+      type: "SOFTMAX",
+      x: 2115.3451136748045,
+      y: 740.7352673317757,
     },
   },
   connections: {
@@ -110,12 +116,6 @@ export const BASIC_WORFKLOW_GRAPH = {
       target: "|iYJ3_6zC7WmwXKgVJrcth|",
       targetHandle: "|in0|",
     },
-    "|iYJ3_6zC7WmwXKgVJrcth|_|out0|_|OUTPUT|_|in0|": {
-      source: "|iYJ3_6zC7WmwXKgVJrcth|",
-      sourceHandle: "|out0|",
-      target: "|OUTPUT|",
-      targetHandle: "|in0|",
-    },
     "|2jOIsySECbTbKTd7aOqkK|_|out0|_|oiQfdN88wBxcyOEY0Fcpd|_|in0|": {
       source: "|2jOIsySECbTbKTd7aOqkK|",
       sourceHandle: "|out0|",
@@ -144,6 +144,18 @@ export const BASIC_WORFKLOW_GRAPH = {
       source: "|h3ENqtt7JAPa0kCJ29GpD|",
       sourceHandle: "|out0|",
       target: "|FinalLoss|",
+      targetHandle: "|in0|",
+    },
+    "|iYJ3_6zC7WmwXKgVJrcth|_|out0|_|aI9rb-9ymAuk2kIJ1Z_DD|_|in0|": {
+      source: "|iYJ3_6zC7WmwXKgVJrcth|",
+      sourceHandle: "|out0|",
+      target: "|aI9rb-9ymAuk2kIJ1Z_DD|",
+      targetHandle: "|in0|",
+    },
+    "|aI9rb-9ymAuk2kIJ1Z_DD|_|out0|_|OUTPUT|_|in0|": {
+      source: "|aI9rb-9ymAuk2kIJ1Z_DD|",
+      sourceHandle: "|out0|",
+      target: "|OUTPUT|",
       targetHandle: "|in0|",
     },
   },

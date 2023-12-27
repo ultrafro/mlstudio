@@ -17,6 +17,7 @@ import { TanhBlock } from "./Blocks/BlockClassDefinitions/TanhBlock";
 import { VectorizeBlock } from "./Blocks/BlockClassDefinitions/VectorizeBlock";
 import * as tf from "@tensorflow/tfjs";
 import { SIMPLE_MULTIPLY_LEARNING_GRAPH } from "./Samples/SimpleMultiplyLearningGraph";
+import { SoftMaxBlock } from "./Blocks/BlockClassDefinitions/SoftMaxBlock";
 
 export type block = {
   name: string;
@@ -53,6 +54,7 @@ export enum BlockType {
   VARIABLE = "VARIABLE",
   CONSTANT = "CONSTANT",
   SQUARE_LOSS = "SQUARE_LOSS",
+  SOFTMAX = "SOFTMAX",
   FINAL_LOSS = "FINAL_LOSS",
   VECTORIZE = "VECTORIZE",
 }
@@ -152,6 +154,12 @@ export const Blocks: Record<BlockType, BlockDefinition> = {
     icon: "icons/square_loss.png",
     classDef: SquareLossBlock,
     nodeType: "binary",
+  },
+  [BlockType.SOFTMAX]: {
+    name: "softmax",
+    icon: "icons/softmax.png",
+    classDef: SoftMaxBlock,
+    nodeType: "unary",
   },
   [BlockType.VECTORIZE]: {
     name: "Vectorize",

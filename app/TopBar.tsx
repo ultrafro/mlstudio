@@ -92,7 +92,24 @@ export default function TopBar(props: { openData: () => void }) {
             session.setSession({ ...session.session, blocksChanged: {} });
           }}
         />
-        <Icon src="/icons/ff.png" />
+        <Icon
+          src="/icons/ff.png"
+          onClick={async () => {
+            const result = getBrokenBlocksList(session.session.network);
+
+            if (result.length > 0) {
+              console.log("found broken blocks! not going to train", result);
+              return;
+            }
+
+            for (let i = 0; i < 500; i++) {
+              //todo: make this find the "final loss" block, right now it's hard coded
+              trainBlocks("|7|", session.session.network, {}, 1);
+            }
+
+            session.setSession({ ...session.session, blocksChanged: {} });
+          }}
+        />
       </FlexRow>
 
       {/* Learning Rate settings */}
