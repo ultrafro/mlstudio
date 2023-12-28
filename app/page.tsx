@@ -16,10 +16,13 @@ import { DEFAULT_SESSION, StudioSession } from "./model";
 import { ReactFlowProvider } from "reactflow";
 import { tensorflowTest3 } from "./Blocks/ActualBlocks";
 import { actualData } from "./Blocks/ActualData";
+import Home from "./Home";
 
 let hasInitialized = false;
 
-export default function Home() {
+export default function Home1() {
+  return <Home />;
+
   const { mode, setMode } = useMode();
   const [dataOpen, setDataOpen] = useState<boolean>(false);
 
