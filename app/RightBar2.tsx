@@ -19,25 +19,31 @@ export default function RightBar2() {
     ?.getValue();
 
   return (
-    <div className="flex items-center justify-center absolute right-5 h-full pointer-events-none">
-      <div className="flex flex-col items-center bg-white p-4 shadow-lg  rounded-md pointer-events-auto">
+    <div className="flex flex-row items-center  ">
+      <div className="flex flex-col items-center justify-center">
         <p className="text-center">Input</p>
         <TensorViewer tensor={inputBlock} sizePX={100} minimal={true} />
+      </div>
+
+      <div className="flex flex-col items-center justify-center">
         <p className="text-center">Correct Output</p>
         <TensorViewer tensor={correctAnswerBlock} sizePX={100} minimal={true} />
+      </div>
+
+      <div className="flex flex-col items-center justify-center">
         <p className="text-center">Prediction</p>
         <TensorViewer tensor={predictedBlock} sizePX={100} minimal={true} />
+      </div>
 
-        <ShadowGraph
-          xData={lossData.x}
-          yData={lossData.y}
-          label={"Training Loss"}
-        />
+      <ShadowGraph
+        xData={lossData.x}
+        yData={lossData.y}
+        label={"Training Loss"}
+      />
 
-        {/* <p className="text-center">Loss on Training set {2}</p>
+      {/* <p className="text-center">Loss on Training set {2}</p>
         <p className="text-center">Loss on Validation set {2}</p>
         <p className="text-center">Loss on Test set {2}</p> */}
-      </div>
     </div>
   );
 }

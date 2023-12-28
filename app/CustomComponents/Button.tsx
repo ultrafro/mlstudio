@@ -6,19 +6,23 @@ export default function Button({
   label,
   override,
   imgSize,
+  interactive = true,
   onClick,
 }: {
   src: string;
   label: string;
   override?: string;
   imgSize?: number;
+  interactive?: boolean;
   onClick?: () => void;
 }) {
+  console.log("label: " + label, interactive);
   return (
     <div
       className={twMerge(
         "flex flex-col w-36 h-28 p-2.5 justify-center items-center transition duration-100 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-[.85] " +
-          override || ""
+          (override || "") +
+          (!interactive ? " pointer-events-none  bg-gray-50" : "")
       )}
       onClick={onClick}
     >

@@ -3,6 +3,7 @@ import { FlexCol, FlexRow, FlexColCenter, FlexRowCenter, Modal } from "../Flex";
 import { SupervisedDataShape } from "../model";
 import DataPreview from "./DataPreview";
 import { SessionProivder } from "../Providers";
+import * as tf from "@tensorflow/tfjs";
 
 export function DataModal(props: { onClose: () => void }) {
   const sessionContext = useContext(SessionProivder);
@@ -88,6 +89,17 @@ const SourceComponent = ({
             newData.outputDimensions = [10];
             newData.inputType = "image";
             newData.outputType = "numbers";
+            newData.srcType = "MNIST";
+          } else {
+            newData.inputDimensions = [1];
+            newData.outputDimensions = [1];
+            newData.inputType = "numbers";
+            newData.outputType = "numbers";
+            newData.customFunction = (input: tf.Tensor) => {
+              const output = tf.mul(input, tf.scalar(2));
+              return output;
+            };
+            newData.srcType = "CUSTOM";
           }
 
           newData.srcType = e.target.value as any;

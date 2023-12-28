@@ -211,12 +211,22 @@ export type StudioSession = {
   supervisedDataShape: SupervisedDataShape;
   blocksChanged?: Record<string, boolean>;
   selectedBlockId?: string;
+  trainingSettings: TrainingSettings;
+};
+
+export type TrainingSettings = {
+  learningRate: number;
+  optimizer: "sgd" | "adagrad" | "adam";
 };
 
 export const DEFAULT_SESSION: StudioSession = {
   network: { ...BASIC_WORFKLOW_GRAPH } as any,
 
   visualizers: {},
+  trainingSettings: {
+    learningRate: 0.1,
+    optimizer: "sgd",
+  },
   supervisedDataShape: {
     inputDimensions: [28, 28],
     outputDimensions: [10],

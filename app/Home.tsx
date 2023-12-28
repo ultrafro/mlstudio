@@ -19,10 +19,13 @@ import { actualData } from "./Blocks/ActualData";
 import TopBar2 from "./TopBar2";
 import LeftBar2 from "./LeftBar2";
 import RightBar2 from "./RightBar2";
+import TrainingModal from "./CustomComponents/TrainingModal";
 
 export default function MLStudio() {
   const { mode, setMode } = useMode();
   const [dataOpen, setDataOpen] = useState<boolean>(false);
+  const [trainingModalOpen, setTrainingModalOpen] = useState<boolean>(false);
+  const [tutorialModalOpen, setTutorialModalOpen] = useState<boolean>(false);
 
   const [session, setSession] = useState<StudioSession>({ ...DEFAULT_SESSION });
   const sessionProviderValue = useMemo(() => {
@@ -37,23 +40,44 @@ export default function MLStudio() {
   return (
     <SessionProivder.Provider value={sessionProviderValue}>
       <MantineProvider>
-        <div className="bg-blue-500  w-full h-full">
-          {/* Full Screen Graph */}
-          <div className="w-full h-full absolute pr-[300px] pl-[300px] pt-[150px] pb-[150px]">
-            <ReactFlowProvider>
-              <GraphDisplay />
-            </ReactFlowProvider>
+        <div className="bg-blue-500  w-full h-full relative">
+          <div className="flex flex-col items-center justify-center w-full h-full gap-2.5 p-4 ">
+            {/* Top Bar */}
+            <TopBar2
+              openData={() => {
+                setDataOpen(true);
+              }}
+              openTrainingModal={() => {
+                setTrainingModalOpen(true);
+              }}
+            />
+            <div className="flex flex-row items-center justify-center w-full h-full  gap-2.5">
+              {/* Left Bar */}
+              <LeftBar2 />
+
+              {/* Graph */}
+              <div className="flex flex-col items-center justify-center w-full h-full">
+                <ReactFlowProvider>
+                  <GraphDisplay />
+                </ReactFlowProvider>
+              </div>
+            </div>
           </div>
-
-          {/* Top Bar */}
-          <TopBar2 />
-
-          {/* Left Bar */}
-          <LeftBar2 />
-
-          {/* Right Bar */}
-          <RightBar2 />
         </div>
+        {dataOpen && (
+          <DataModal
+            onClose={() => {
+              setDataOpen(false);
+            }}
+          />
+        )}
+        {trainingModalOpen && (
+          <TrainingModal
+            onClose={() => {
+              setTrainingModalOpen(false);
+            }}
+          />
+        )}
       </MantineProvider>
     </SessionProivder.Provider>
   );

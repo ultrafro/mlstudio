@@ -135,7 +135,12 @@ export function useTrain1Step() {
     //forwardBlocks(session.session.network);
 
     //todo: make this find the "final loss" block, right now it's hard coded
-    trainBlocks("|7|", session.session.network, {}, 1);
+    trainBlocks(
+      "|7|",
+      session.session.network,
+      session.session.trainingSettings,
+      1
+    );
 
     recordLoss();
 
@@ -181,7 +186,12 @@ export function useTrainContinuously() {
       }
 
       for (let i = 0; i < iterations; i++) {
-        trainBlocks("|7|", session.session.network, {}, 1);
+        trainBlocks(
+          "|7|",
+          session.session.network,
+          session.session.trainingSettings,
+          1
+        );
       }
 
       recordLoss();

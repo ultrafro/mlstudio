@@ -62,6 +62,13 @@ export default function GraphDisplay() {
 
   useInitializeBlocks();
 
+  const reactFlow = useReactFlow();
+  useEffect(() => {
+    console.log("current zoom: ", reactFlow.getZoom());
+    console.log("current position: ", reactFlow.getViewport());
+    reactFlow.zoomTo(0.3);
+  }, [reactFlow]);
+
   const [redisplay, setRedisplay] = useState({});
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -273,17 +280,7 @@ export default function GraphDisplay() {
   }, [setNodes, setEdges, hash]);
 
   return (
-    <FlexCol
-      style={{
-        width: "100%",
-        height: "calc(100% - 24px)",
-        backgroundColor: "white",
-        borderRadius: "10px",
-        border: "2px solid black",
-        margin: "12px",
-        position: "relative",
-      }}
-    >
+    <div className="flex flex-col items-center justify-center w-full h-full  bg-white p-4 shadow-lg rounded-md">
       <ReactFlow
         nodes={nodes}
         edges={labeledEdges}
@@ -299,6 +296,6 @@ export default function GraphDisplay() {
       </ReactFlow>
       <SelectedGraph />
       <ErrorDisplay />
-    </FlexCol>
+    </div>
   );
 }

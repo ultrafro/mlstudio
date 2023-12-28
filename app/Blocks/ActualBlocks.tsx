@@ -5,6 +5,7 @@ import {
   Network,
   OptimizerConfig,
   SupervisedDataShape,
+  TrainingSettings,
 } from "../model";
 import { BlockClass } from "./BlockClass";
 import { actualData } from "./ActualData";
@@ -477,7 +478,7 @@ function getLossAndIntermediates(
 export function trainBlocks(
   id: string,
   network: Network,
-  optimizerConfig: OptimizerConfig,
+  optimizerConfig: TrainingSettings,
   iterations: number
 ) {
   //get a data sample'
@@ -492,9 +493,17 @@ export function trainBlocks(
 
   const { value, grads: variableGrads } = tf.variableGrads(loss2 as any); // gradient of f as respect of each variable
 
-  const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
+  const optimizer =
+    optimizerConfig.optimizer == "sgd"
+      ? tf.train.sgd(optimizerConfig.learningRate)
+      : optimizerConfig.optimizer == "adagrad"
+      ? tf.train.adagrad(optimizerConfig.learningRate)
+      : tf.train.adam(optimizerConfig.learningRate);
 
-  optimizer.applyGradients(variableGrads);
+  // const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
+  // const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
+
+  optimizer.applyGradients(variableGrads as any);
 
   const { loss: lossPrep, intermediates: intermediatePrep } =
     getLossAndIntermediates(executions, undefined, undefined, true);

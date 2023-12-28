@@ -74,7 +74,12 @@ export default function TopBar(props: { openData: () => void }) {
             //forwardBlocks(session.session.network);
 
             //todo: make this find the "final loss" block, right now it's hard coded
-            trainBlocks("|7|", session.session.network, {}, 1);
+            trainBlocks(
+              "|7|",
+              session.session.network,
+              session.session.trainingSettings,
+              1
+            );
 
             //find any variable blocks and print them out
             for (const block of Object.values(ActualBlocks)) {
@@ -104,7 +109,12 @@ export default function TopBar(props: { openData: () => void }) {
 
             for (let i = 0; i < 500; i++) {
               //todo: make this find the "final loss" block, right now it's hard coded
-              trainBlocks("|7|", session.session.network, {}, 1);
+              trainBlocks(
+                "|7|",
+                session.session.network,
+                session.session.trainingSettings,
+                1
+              );
             }
 
             session.setSession({ ...session.session, blocksChanged: {} });
