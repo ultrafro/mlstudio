@@ -212,7 +212,8 @@ export function useTrainContinuously() {
 
   const stopTrainingContinuously = useCallback(() => {
     IsTrainingContinuously.iterations = undefined;
-  }, []);
+    session.setSession({ ...session.session });
+  }, [session]);
 
   return { startTrainingContinuously, stopTrainingContinuously };
 }
