@@ -5,6 +5,7 @@ import {
   getBrokenBlocksList,
   getSortedBlockIdsUpToAndIncluding,
   initializeBlocks,
+  loss,
   trainBlocks,
 } from "./Blocks/ActualBlocks";
 import { nanoid } from "nanoid";
@@ -135,8 +136,42 @@ export function useTrain1Step() {
     //todo: make this find the "final loss" block, right now it's hard coded
     trainBlocks("|7|", session.session.network, {}, 1);
 
+    recordLoss();
+
     session.setSession({ ...session.session, blocksChanged: {} });
   }, [session]);
 
   return train1Step;
+}
+
+export function useLossData() {
+  const session = useContext(SessionProivder);
+
+  const data = useMemo(() => {
+    session; //update every session update
+    const x: number[] = [];
+    const y = loss;
+    for (let i = 0; i < y.length; i++) {
+      x.push(i);
+    }
+
+    const negativeLogLikelihood = y.map((loss) => {
+      return -Math.log(loss);
+    });
+
+    return { x, y, negativeLogLikelihood };
+  }, [session]);
+
+  return data;
+}
+
+function recordLoss() {
+  for (const block of Object.values(ActualBlocks)) {
+    if (block.type == BlockType.FINAL_LOSS) {
+      const lossTensor = block.getValue();
+      if (lossTensor) {
+        loss.push(lossTensor.dataSync()[0]);
+      }
+    }
+  }
 }

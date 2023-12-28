@@ -11,6 +11,8 @@ import { actualData } from "./ActualData";
 
 export const ActualBlocks: Record<string, BlockClass> = {};
 
+export const loss: number[] = [];
+
 type BlockExecution = {
   id: string;
   inputs: string[];

@@ -39,7 +39,7 @@ export default function MLStudio() {
       <MantineProvider>
         <div className="bg-blue-500  w-full h-full">
           {/* Full Screen Graph */}
-          <div className="w-full h-full absolute p-5">
+          <div className="w-full h-full absolute pr-[300px] pl-[300px] pt-[150px] pb-[150px]">
             <ReactFlowProvider>
               <GraphDisplay />
             </ReactFlowProvider>

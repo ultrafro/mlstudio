@@ -41,6 +41,7 @@ export class FinalLossBlock extends BlockClass {
     //just copy the first input
     const result = tf.mul(inputs[0], 1);
     // const result = inputs[0].clone();
+    this.value = result;
 
     return result;
   };
