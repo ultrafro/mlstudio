@@ -13,6 +13,10 @@ export const ActualBlocks: Record<string, BlockClass> = {};
 
 export const loss: number[] = [];
 
+export let IsTrainingContinuously: { iterations: number | undefined } = {
+  iterations: undefined,
+};
+
 type BlockExecution = {
   id: string;
   inputs: string[];

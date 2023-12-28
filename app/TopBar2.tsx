@@ -1,8 +1,18 @@
+import { useContext } from "react";
 import Button from "./CustomComponents/Button";
-import { useTrain1Step } from "./utils";
+import { useTrain1Step, useTrainContinuously } from "./utils";
+import { SessionProivder } from "./Providers";
+import { IsTrainingContinuously } from "./Blocks/ActualBlocks";
 
 export default function TopBar2() {
+  const session = useContext(SessionProivder);
+
   const train1Step = useTrain1Step();
+
+  const { startTrainingContinuously, stopTrainingContinuously } =
+    useTrainContinuously();
+
+  const isTrainingContinuously = IsTrainingContinuously.iterations ?? 0 > 0;
 
   return (
     <div className="flex items-center justify-center absolute top-5 w-full pointer-events-none">
@@ -13,11 +23,22 @@ export default function TopBar2() {
           override={"z-10"}
           onClick={train1Step}
         />
-        <Button
-          src={"/icons/play.png"}
-          label="train continuously"
-          override={"z-10"}
-        />
+        {!isTrainingContinuously && (
+          <Button
+            src={"/icons/play.png"}
+            label="train continuously"
+            override={"z-10"}
+            onClick={startTrainingContinuously}
+          />
+        )}
+        {isTrainingContinuously && (
+          <Button
+            src={"/icons/pause.png"}
+            label="stop training"
+            override={"z-10"}
+            onClick={stopTrainingContinuously}
+          />
+        )}
         <Button
           src={"/icons/rocket.png"}
           label="execute model"

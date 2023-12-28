@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { SessionProivder } from "./Providers";
 import {
   ActualBlocks,
+  IsTrainingContinuously,
   getBrokenBlocksList,
   getSortedBlockIdsUpToAndIncluding,
   initializeBlocks,
@@ -163,6 +164,47 @@ export function useLossData() {
   }, [session]);
 
   return data;
+}
+
+export function useTrainContinuously() {
+  const session = useContext(SessionProivder);
+
+  const ContinuousTrainingLoop = useCallback(() => {
+    const iterations = IsTrainingContinuously.iterations ?? 0;
+
+    if (iterations > 0) {
+      const result = getBrokenBlocksList(session.session.network);
+
+      if (result.length > 0) {
+        console.log("found broken blocks! not going to train", result);
+        return;
+      }
+
+      for (let i = 0; i < iterations; i++) {
+        trainBlocks("|7|", session.session.network, {}, 1);
+      }
+
+      recordLoss();
+
+      session.setSession({ ...session.session, blocksChanged: {} });
+    }
+
+    setTimeout(() => {
+      ContinuousTrainingLoop();
+    }, 10);
+  }, [session]);
+
+  const startTrainingContinuously = useCallback(() => {
+    IsTrainingContinuously.iterations = 1;
+
+    ContinuousTrainingLoop();
+  }, [ContinuousTrainingLoop]);
+
+  const stopTrainingContinuously = useCallback(() => {
+    IsTrainingContinuously.iterations = undefined;
+  }, []);
+
+  return { startTrainingContinuously, stopTrainingContinuously };
 }
 
 function recordLoss() {

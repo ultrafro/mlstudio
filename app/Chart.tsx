@@ -73,7 +73,7 @@ const SimpleChart: React.FC<ChartProps> = ({
       y: {
         // min: 0,
       },
-      maintainAspectRatio: false,
+      // maintainAspectRatio: false,
     },
   };
 
