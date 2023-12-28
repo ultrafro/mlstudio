@@ -1,10 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { SessionProivder } from "./Providers";
 import {
   ActualBlocks,
   getSortedBlockIdsUpToAndIncluding,
   initializeBlocks,
 } from "./Blocks/ActualBlocks";
+import { nanoid } from "nanoid";
+import { BlockType } from "./model";
 
 export enum Mode {
   Train = "Train",
@@ -82,4 +84,35 @@ export function squeezeDims(dims: number[]): number[] {
   }
 
   return result;
+}
+
+export function useCreateBlock(): (block: BlockType) => void {
+  const session = useContext(SessionProivder);
+
+  const createBlock = useCallback(
+    (block: BlockType) => {
+      const newBlockId = "|" + nanoid() + "|";
+      const x = Math.random() * 300;
+      const y = Math.random() * 300;
+
+      session.setSession({
+        ...session.session,
+        network: {
+          ...session.session.network,
+          blocks: {
+            ...session.session.network.blocks,
+            [newBlockId]: {
+              id: newBlockId,
+              type: block as BlockType,
+              x,
+              y,
+            },
+          },
+        },
+      });
+    },
+    [session]
+  );
+
+  return createBlock;
 }

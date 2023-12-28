@@ -6,18 +6,21 @@ export default function Button({
   label,
   override,
   imgSize,
+  onClick,
 }: {
   src: string;
   label: string;
   override?: string;
   imgSize?: number;
+  onClick?: () => void;
 }) {
   return (
     <div
       className={twMerge(
-        "flex flex-col w-36 h-28 p-2.5 justify-center items-center " +
+        "flex flex-col w-36 h-28 p-2.5 justify-center items-center transition duration-100 ease-in-out transform hover:scale-105 hover:shadow-lg active:scale-[.85] " +
           override || ""
       )}
+      onClick={onClick}
     >
       <div
         className={"mb-2 "}
@@ -30,15 +33,30 @@ export default function Button({
           height: imgSize || 24,
         }}
       />
-      <div className="w-32 text-center text-black text-xs font-normal font-['Inter']">
+      <div className="w-32 text-center text-black text-xs font-normal font-['Inter']  select-none">
         {label}
       </div>
     </div>
   );
 }
 
-export function ShadowButton({ src, label }: { src: string; label: string }) {
-  return <Button src={src} label={label} override={"rounded-2xl shadow"} />;
+export function ShadowButton({
+  src,
+  label,
+  onClick,
+}: {
+  src: string;
+  label: string;
+  onClick?: () => void;
+}) {
+  return (
+    <Button
+      src={src}
+      label={label}
+      override={"rounded-2xl shadow"}
+      onClick={onClick}
+    />
+  );
 }
 
 export function ShadowGraph({

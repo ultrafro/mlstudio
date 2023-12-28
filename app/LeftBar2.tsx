@@ -4,9 +4,11 @@ import { SessionProivder } from "./Providers";
 import { BlockType, Blocks, blocks } from "./model";
 import { useContext } from "react";
 import { ShadowButton } from "./CustomComponents/Button";
+import { useCreateBlock } from "./utils";
 
 export default function LeftBar2() {
   const session = useContext(SessionProivder);
+  const createBlock = useCreateBlock();
 
   return (
     <div className="flex items-center justify-center absolute left-5 h-full pointer-events-none">
@@ -20,6 +22,9 @@ export default function LeftBar2() {
                 key={blockDefinition.name}
                 src={"/icons/neuronIcon.png"}
                 label={blockDefinition.name}
+                onClick={() => {
+                  createBlock(block as BlockType);
+                }}
               />
             );
           })}
