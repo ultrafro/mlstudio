@@ -2,8 +2,10 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { SessionProivder } from "./Providers";
 import {
   ActualBlocks,
+  getBrokenBlocksList,
   getSortedBlockIdsUpToAndIncluding,
   initializeBlocks,
+  trainBlocks,
 } from "./Blocks/ActualBlocks";
 import { nanoid } from "nanoid";
 import { BlockType } from "./model";
@@ -115,4 +117,26 @@ export function useCreateBlock(): (block: BlockType) => void {
   );
 
   return createBlock;
+}
+
+export function useTrain1Step() {
+  const session = useContext(SessionProivder);
+
+  const train1Step = useCallback(() => {
+    const result = getBrokenBlocksList(session.session.network);
+
+    if (result.length > 0) {
+      console.log("found broken blocks! not going to train", result);
+      return;
+    }
+
+    //forwardBlocks(session.session.network);
+
+    //todo: make this find the "final loss" block, right now it's hard coded
+    trainBlocks("|7|", session.session.network, {}, 1);
+
+    session.setSession({ ...session.session, blocksChanged: {} });
+  }, [session]);
+
+  return train1Step;
 }

@@ -1,6 +1,9 @@
 import Button from "./CustomComponents/Button";
+import { useTrain1Step } from "./utils";
 
 export default function TopBar2() {
+  const train1Step = useTrain1Step();
+
   return (
     <div className="flex items-center justify-center absolute top-5 w-full pointer-events-none">
       <div className="flex flex-row items-center bg-white p-4 shadow-lg h-24 rounded-md pointer-events-auto relative">
@@ -8,6 +11,7 @@ export default function TopBar2() {
           src={"/icons/step.png"}
           label="train 1 step"
           override={"z-10"}
+          onClick={train1Step}
         />
         <Button
           src={"/icons/play.png"}
