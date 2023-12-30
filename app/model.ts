@@ -18,6 +18,7 @@ import { VectorizeBlock } from "./Blocks/BlockClassDefinitions/VectorizeBlock";
 import * as tf from "@tensorflow/tfjs";
 import { SIMPLE_MULTIPLY_LEARNING_GRAPH } from "./Samples/SimpleMultiplyLearningGraph";
 import { SoftMaxBlock } from "./Blocks/BlockClassDefinitions/SoftMaxBlock";
+import { basicLinearGraph } from "./Samples/basicLinearGraph";
 
 export type block = {
   name: string;
@@ -26,7 +27,7 @@ export type block = {
 
 export const tensorBlock: block = {
   name: "Tensor",
-  icon: "icons/run.png",
+  icon: "/icons/run.png",
 };
 
 export const blocks: block[] = [tensorBlock, tensorBlock];
@@ -37,6 +38,7 @@ export type BlockDefinition = {
   classDef: typeof BlockClass;
   nodeType: "source" | "target" | "unary" | "binary" | "sink";
   notDeletable?: boolean;
+  hasWeights: boolean;
 };
 
 export enum BlockType {
@@ -44,10 +46,8 @@ export enum BlockType {
   OUTPUT = "OUTPUT",
   DATA_IN = "DATA_IN",
   DATA_OUT = "DATA_OUT",
-  SAMPLE_DATA = "SAMPLE_DATA",
   LINEAR = "LINEAR",
   TANH = "TANH",
-  CROSS_ENTROPY = "CROSS_ENTROPY",
   RANDOM_NUMBERS = "RANDOM_NUMBERS",
   MULTIPLY = "MULTIPLY",
   ADD = "ADD",
@@ -62,110 +62,113 @@ export enum BlockType {
 export const Blocks: Record<BlockType, BlockDefinition> = {
   [BlockType.INPUT]: {
     name: "Input",
-    icon: "icons/data.png",
+    icon: "/icons/input.png",
     classDef: InputBlock,
     nodeType: "unary",
     notDeletable: true,
+    hasWeights: false,
   },
   [BlockType.OUTPUT]: {
     name: "Output",
-    icon: "icons/data.png",
+    icon: "/icons/output.png",
     classDef: OutputBlock,
     nodeType: "unary",
     notDeletable: true,
+    hasWeights: false,
   },
   [BlockType.DATA_IN]: {
     name: "Data Input",
-    icon: "icons/data.png",
+    icon: "/icons/input.png",
     classDef: DataInBlock,
     nodeType: "source",
     notDeletable: true,
+    hasWeights: false,
   },
   [BlockType.DATA_OUT]: {
     name: "Data Output",
-    icon: "icons/data.png",
+    icon: "/icons/output.png",
     classDef: DataOutBlock,
     nodeType: "source",
     notDeletable: true,
+    hasWeights: false,
   },
   [BlockType.FINAL_LOSS]: {
     name: "Final Loss",
-    icon: "icons/final_loss.png",
+    icon: "/icons/finalLoss.png",
     classDef: FinalLossBlock,
     nodeType: "target",
     notDeletable: true,
+    hasWeights: false,
   },
   [BlockType.RANDOM_NUMBERS]: {
     name: "Random Numbers",
-    icon: "icons/data.png",
+    icon: "/icons/random.png",
     classDef: RandomNumbersBlock,
     nodeType: "source",
+    hasWeights: false,
   },
   [BlockType.MULTIPLY]: {
     name: "Multiply",
-    icon: "icons/data.png",
+    icon: "/icons/multiply.png",
     classDef: MultiplyBlock,
     nodeType: "binary",
+    hasWeights: false,
   },
   [BlockType.ADD]: {
     name: "Add",
-    icon: "icons/data.png",
+    icon: "/icons/add.png",
     classDef: AddBlock,
     nodeType: "binary",
+    hasWeights: false,
   },
   [BlockType.VARIABLE]: {
     name: "Variable",
-    icon: "icons/data.png",
+    icon: "/icons/variable.png",
     classDef: VariableBlock,
     nodeType: "source",
+    hasWeights: true,
   },
   [BlockType.CONSTANT]: {
     name: "Constant",
-    icon: "icons/data.png",
+    icon: "/icons/constant.png",
     classDef: ConstantBlock,
     nodeType: "source",
-  },
-  [BlockType.SAMPLE_DATA]: {
-    name: "Sample Data",
-    icon: "icons/sample_data.png",
-    classDef: BlockClass,
-    nodeType: "unary",
+    hasWeights: false,
   },
   [BlockType.LINEAR]: {
-    name: "Linear",
-    icon: "icons/linear.png",
+    name: "Neuron Layer",
+    icon: "/icons/neuronIcon.png",
     classDef: LinearBlock,
     nodeType: "unary",
+    hasWeights: true,
   },
   [BlockType.TANH]: {
     name: "Tanh",
-    icon: "icons/tanh.png",
+    icon: "/icons/tanh.png",
     classDef: TanhBlock,
     nodeType: "unary",
-  },
-  [BlockType.CROSS_ENTROPY]: {
-    name: "Cross Entropy",
-    icon: "icons/cross_entropy.png",
-    classDef: BlockClass,
-    nodeType: "unary",
+    hasWeights: false,
   },
   [BlockType.SQUARE_LOSS]: {
     name: "square Loss",
-    icon: "icons/square_loss.png",
+    icon: "/icons/square.png",
     classDef: SquareLossBlock,
     nodeType: "binary",
+    hasWeights: false,
   },
   [BlockType.SOFTMAX]: {
     name: "softmax",
-    icon: "icons/softmax.png",
+    icon: "/icons/crossEntropy.png",
     classDef: SoftMaxBlock,
     nodeType: "unary",
+    hasWeights: false,
   },
   [BlockType.VECTORIZE]: {
     name: "Vectorize",
-    icon: "icons/vectorize.png",
+    icon: "/icons/flatten.png",
     classDef: VectorizeBlock,
     nodeType: "unary",
+    hasWeights: false,
   },
 };
 
@@ -220,7 +223,8 @@ export type TrainingSettings = {
 };
 
 export const DEFAULT_SESSION: StudioSession = {
-  network: { ...BASIC_WORFKLOW_GRAPH } as any,
+  // network: { ...BASIC_WORFKLOW_GRAPH } as any,
+  network: { ...basicLinearGraph } as any,
 
   visualizers: {},
   trainingSettings: {

@@ -1,3 +1,4 @@
 export default function BlockEditor() {
-  return <div>BlockEditor</div>;
+  return null;
+  // return <div>BlockEditor</div>;
 }

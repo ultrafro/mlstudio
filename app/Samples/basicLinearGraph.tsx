@@ -1,4 +1,4 @@
-export const BASIC_WORFKLOW_GRAPH = {
+export const basicLinearGraph = {
   blocks: {
     "|FinalLoss|": {
       id: "|FinalLoss|",
@@ -30,47 +30,11 @@ export const BASIC_WORFKLOW_GRAPH = {
       x: 1759.5900643949699,
       y: -17.343483355702574,
     },
-    "|2jOIsySECbTbKTd7aOqkK|": {
-      id: "|2jOIsySECbTbKTd7aOqkK|",
-      type: "VARIABLE",
-      x: -114.75811896799178,
-      y: 540.0233510380223,
-      params: {
-        shape: [10, 784],
-      },
-    },
-    "|oiQfdN88wBxcyOEY0Fcpd|": {
-      id: "|oiQfdN88wBxcyOEY0Fcpd|",
-      type: "MULTIPLY",
-      x: 250.55174276824346,
-      y: 200.21962967181855,
-    },
     "|eFAcCs1f9U9naiEkcPcnk|": {
       id: "|eFAcCs1f9U9naiEkcPcnk|",
       type: "VECTORIZE",
       x: -108.72389472242003,
       y: 188.20505252008343,
-    },
-    "|uAbW9OTqNDS6tgEg-otAq|": {
-      id: "|uAbW9OTqNDS6tgEg-otAq|",
-      type: "ADD",
-      x: 643.3084289682783,
-      y: 322.3581595653893,
-    },
-    "|v3FZXXUJn_o7HhJ8N17_D|": {
-      id: "|v3FZXXUJn_o7HhJ8N17_D|",
-      type: "VARIABLE",
-      x: 344.52593577257994,
-      y: 608.4170876611445,
-      params: {
-        shape: [10, 1],
-      },
-    },
-    "|iYJ3_6zC7WmwXKgVJrcth|": {
-      id: "|iYJ3_6zC7WmwXKgVJrcth|",
-      type: "TANH",
-      x: 904.3877248265446,
-      y: 322.9056161232503,
     },
     "|h3ENqtt7JAPa0kCJ29GpD|": {
       id: "|h3ENqtt7JAPa0kCJ29GpD|",
@@ -83,6 +47,16 @@ export const BASIC_WORFKLOW_GRAPH = {
       type: "SOFTMAX",
       x: 1313.3451136748045,
       y: 326.73526733177573,
+    },
+    "|mKzvGRVa4flQ2gyRO59U7|": {
+      id: "|mKzvGRVa4flQ2gyRO59U7|",
+      type: "LINEAR",
+      x: 657.5023015332541,
+      y: 225.17631116337878,
+      params: {
+        inputSize: 784,
+        outputSize: 10,
+      },
     },
   },
   connections: {
@@ -97,36 +71,6 @@ export const BASIC_WORFKLOW_GRAPH = {
       sourceHandle: "|out0|",
       target: "|eFAcCs1f9U9naiEkcPcnk|",
       targetHandle: "|in0|",
-    },
-    "|oiQfdN88wBxcyOEY0Fcpd|_|out0|_|uAbW9OTqNDS6tgEg-otAq|_|in1|": {
-      source: "|oiQfdN88wBxcyOEY0Fcpd|",
-      sourceHandle: "|out0|",
-      target: "|uAbW9OTqNDS6tgEg-otAq|",
-      targetHandle: "|in1|",
-    },
-    "|v3FZXXUJn_o7HhJ8N17_D|_|out0|_|uAbW9OTqNDS6tgEg-otAq|_|in0|": {
-      source: "|v3FZXXUJn_o7HhJ8N17_D|",
-      sourceHandle: "|out0|",
-      target: "|uAbW9OTqNDS6tgEg-otAq|",
-      targetHandle: "|in0|",
-    },
-    "|uAbW9OTqNDS6tgEg-otAq|_|out0|_|iYJ3_6zC7WmwXKgVJrcth|_|in0|": {
-      source: "|uAbW9OTqNDS6tgEg-otAq|",
-      sourceHandle: "|out0|",
-      target: "|iYJ3_6zC7WmwXKgVJrcth|",
-      targetHandle: "|in0|",
-    },
-    "|2jOIsySECbTbKTd7aOqkK|_|out0|_|oiQfdN88wBxcyOEY0Fcpd|_|in0|": {
-      source: "|2jOIsySECbTbKTd7aOqkK|",
-      sourceHandle: "|out0|",
-      target: "|oiQfdN88wBxcyOEY0Fcpd|",
-      targetHandle: "|in0|",
-    },
-    "|eFAcCs1f9U9naiEkcPcnk|_|out0|_|oiQfdN88wBxcyOEY0Fcpd|_|in1|": {
-      source: "|eFAcCs1f9U9naiEkcPcnk|",
-      sourceHandle: "|out0|",
-      target: "|oiQfdN88wBxcyOEY0Fcpd|",
-      targetHandle: "|in1|",
     },
     "|DATA_OUT|_|out0|_|h3ENqtt7JAPa0kCJ29GpD|_|in1|": {
       source: "|DATA_OUT|",
@@ -146,16 +90,22 @@ export const BASIC_WORFKLOW_GRAPH = {
       target: "|FinalLoss|",
       targetHandle: "|in0|",
     },
-    "|iYJ3_6zC7WmwXKgVJrcth|_|out0|_|aI9rb-9ymAuk2kIJ1Z_DD|_|in0|": {
-      source: "|iYJ3_6zC7WmwXKgVJrcth|",
-      sourceHandle: "|out0|",
-      target: "|aI9rb-9ymAuk2kIJ1Z_DD|",
-      targetHandle: "|in0|",
-    },
     "|aI9rb-9ymAuk2kIJ1Z_DD|_|out0|_|OUTPUT|_|in0|": {
       source: "|aI9rb-9ymAuk2kIJ1Z_DD|",
       sourceHandle: "|out0|",
       target: "|OUTPUT|",
+      targetHandle: "|in0|",
+    },
+    "|eFAcCs1f9U9naiEkcPcnk|_|out0|_|mKzvGRVa4flQ2gyRO59U7|_|in0|": {
+      source: "|eFAcCs1f9U9naiEkcPcnk|",
+      sourceHandle: "|out0|",
+      target: "|mKzvGRVa4flQ2gyRO59U7|",
+      targetHandle: "|in0|",
+    },
+    "|mKzvGRVa4flQ2gyRO59U7|_|out0|_|aI9rb-9ymAuk2kIJ1Z_DD|_|in0|": {
+      source: "|mKzvGRVa4flQ2gyRO59U7|",
+      sourceHandle: "|out0|",
+      target: "|aI9rb-9ymAuk2kIJ1Z_DD|",
       targetHandle: "|in0|",
     },
   },

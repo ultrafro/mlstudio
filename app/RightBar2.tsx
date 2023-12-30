@@ -21,18 +21,18 @@ export default function RightBar2() {
   return (
     <div className="flex flex-row items-center  ">
       <div className="flex flex-col items-center justify-center">
-        <p className="text-center">Input</p>
         <TensorViewer tensor={inputBlock} sizePX={100} minimal={true} />
+        <p className="text-center">Input</p>
       </div>
 
       <div className="flex flex-col items-center justify-center">
-        <p className="text-center">Correct Output</p>
         <TensorViewer tensor={correctAnswerBlock} sizePX={100} minimal={true} />
+        <p className="text-center">Correct Output</p>
       </div>
 
       <div className="flex flex-col items-center justify-center">
-        <p className="text-center">Prediction</p>
         <TensorViewer tensor={predictedBlock} sizePX={100} minimal={true} />
+        <p className="text-center">Prediction</p>
       </div>
 
       <ShadowGraph

@@ -23,7 +23,8 @@ export default function LeftBar2() {
             return (
               <ShadowButton
                 key={blockDefinition.name}
-                src={"/icons/neuronIcon.png"}
+                src={blockDefinition.icon}
+                // src={"/icons/neuronIcon.png"}
                 label={blockDefinition.name}
                 onClick={() => {
                   createBlock(block as BlockType);

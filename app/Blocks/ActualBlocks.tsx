@@ -491,7 +491,59 @@ export function trainBlocks(
     return loss;
   };
 
-  const { value, grads: variableGrads } = tf.variableGrads(loss2 as any); // gradient of f as respect of each variable
+  const cr = tf.grads(loss2 as any);
+
+  //get a list of blocks which have "weights"
+  const trainableBlocks = Object.values(ActualBlocks).filter((block) => {
+    return Blocks[network.blocks[block.id].type].hasWeights;
+  });
+
+  const trainingVariableMap: Record<
+    string,
+    { blockId: string; weight: tf.Variable; grad?: tf.Tensor; idx: number }
+  > = {};
+
+  const trainableVariables: tf.Variable[] = [];
+  let counter = 0;
+  for (const block of trainableBlocks) {
+    const weights = block.getWeights();
+    if (!!weights) {
+      for (const weight of weights) {
+        trainingVariableMap[weight.name] = {
+          blockId: block.id,
+          weight,
+          idx: counter,
+        };
+        trainableVariables.push(weight);
+        counter++;
+      }
+    }
+  }
+
+  const grads = cr(trainableVariables);
+
+  //put the grads back into the training variable map
+  for (let i = 0; i < grads.length; i++) {
+    //find an entry in trainingVariableMap that matches this idx
+    const entry = Object.values(trainingVariableMap).find((entry) => {
+      return entry.idx == i;
+    });
+
+    if (entry) {
+      entry.grad = grads[i];
+    }
+  }
+
+  //create a named variable map for the grads
+  const namedGrads: Record<string, tf.Tensor> = {};
+  for (const key in trainingVariableMap) {
+    const entry = trainingVariableMap[key];
+    namedGrads[entry.weight.name] = entry.grad as tf.Tensor;
+  }
+
+  //todo: save weight grads
+
+  //const { value, grads: variableGrads } = tf.variableGrads(loss2 as any); // gradient of f as respect of each variable
 
   const optimizer =
     optimizerConfig.optimizer == "sgd"
@@ -503,7 +555,7 @@ export function trainBlocks(
   // const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
   // const optimizer = tf.train.sgd(0.1); // Stochastic Gradient Descent with learning rate 0.01
 
-  optimizer.applyGradients(variableGrads as any);
+  optimizer.applyGradients(namedGrads as any);
 
   const { loss: lossPrep, intermediates: intermediatePrep } =
     getLossAndIntermediates(executions, undefined, undefined, true);

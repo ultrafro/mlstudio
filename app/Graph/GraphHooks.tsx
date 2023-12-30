@@ -43,7 +43,7 @@ export function getNodesFromNetwork(network: Network): Node<
     result.push({
       id: block.id,
       position: { x: block.x, y: block.y },
-      data: { label: definition.name + "-" + block.id },
+      data: { label: definition.name },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
       type: definition.nodeType,

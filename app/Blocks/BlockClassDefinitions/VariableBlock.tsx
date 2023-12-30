@@ -9,7 +9,7 @@ export class VariableBlock extends BlockClass {
 
   variable = tf.variable(tf.tensor1d([Math.random()]), true);
 
-  constructor(id: string) {
+  constructor(id: string, loadFromStorage: boolean) {
     super(id, false);
     this.variable.dispose();
 
@@ -65,6 +65,10 @@ export class VariableBlock extends BlockClass {
 
   override getGrads(): Tensor | null {
     return this.grads ?? null;
+  }
+
+  override getWeights(): tf.Variable[] | null {
+    return [this.variable];
   }
 
   override render = () => {

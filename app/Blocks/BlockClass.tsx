@@ -3,6 +3,7 @@ import { Tensor } from "@tensorflow/tfjs";
 import { BlockParams, BlockType } from "../model";
 import BlockEditor from "./BlockEditor";
 import { areParamsTheSame } from "../utils";
+import { ReactElement } from "react";
 
 export class BlockClass {
   loadFromStorage: boolean;
@@ -15,6 +16,8 @@ export class BlockClass {
   value?: Tensor;
 
   grads?: Tensor;
+
+  weightGrads?: Tensor[];
 
   viewables: Record<string, Tensor> = {};
 
@@ -85,9 +88,17 @@ export class BlockClass {
     return this.grads ?? null;
   }
 
+  getWeights(): tf.Variable[] | null {
+    return null;
+  }
+
+  saveWeightGrads(grads: Tensor[]) {
+    this.weightGrads = grads;
+  }
+
   destroy() {}
 
-  render = () => {
-    return <BlockEditor />;
+  render: () => ReactElement | null = () => {
+    return null;
   };
 }

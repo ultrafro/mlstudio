@@ -57,8 +57,9 @@ export function ShadowButton({
     <Button
       src={src}
       label={label}
-      override={"rounded-2xl shadow"}
+      override={"rounded-2xl shadow w-36 h-36 "}
       onClick={onClick}
+      imgSize={40}
     />
   );
 }

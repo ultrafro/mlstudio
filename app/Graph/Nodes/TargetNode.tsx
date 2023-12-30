@@ -4,6 +4,7 @@ import { MIDDLE_HANDLE_HEIGHT, NODE_WIDTH } from "../GraphNodeConstants";
 import { SessionProivder } from "../../Providers";
 import { ActualBlocks } from "../../Blocks/ActualBlocks";
 import ViewButton from "../ViewButton";
+import NodeCommon from "./NodeCommon";
 
 function TargetNode(props: NodeProps) {
   const session = useContext(SessionProivder);
@@ -32,8 +33,11 @@ function TargetNode(props: NodeProps) {
           background: "#555",
         }}
       />
-      <ViewButton id={props.id} />
-      {props.data?.label}
+      <NodeCommon
+        id={props.id}
+        label={props.data?.label}
+        renderEmpty={!block || !block.render()}
+      />
       {block && block.render()}
     </div>
   );

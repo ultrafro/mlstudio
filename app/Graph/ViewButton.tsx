@@ -7,10 +7,14 @@ export default function ViewButton({ id }: { id: string }) {
   //render an icon of an eye which is a button
   return (
     <div
+      className="rounded-sm"
       style={{
         position: "absolute",
         top: 0,
         right: 0,
+        backgroundColor: "white",
+        width: "20px",
+        height: "20px",
       }}
     >
       <button
@@ -21,7 +25,15 @@ export default function ViewButton({ id }: { id: string }) {
           session.setSession(newSession);
         }}
       >
-        <img src="https://img.icons8.com/material-outlined/24/000000/visible--v1.png" />
+        <div
+          style={{
+            backgroundImage:
+              "url('https://img.icons8.com/material-outlined/24/000000/visible--v1.png')",
+            backgroundSize: "cover",
+            width: "20px",
+            height: "20px",
+          }}
+        />
       </button>
     </div>
   );

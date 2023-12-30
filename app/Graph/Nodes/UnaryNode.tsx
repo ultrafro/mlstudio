@@ -4,6 +4,8 @@ import { MIDDLE_HANDLE_HEIGHT, NODE_WIDTH } from "../GraphNodeConstants";
 import { SessionProivder } from "../../Providers";
 import { ActualBlocks } from "../../Blocks/ActualBlocks";
 import ViewButton from "../ViewButton";
+import Logo from "../Logo";
+import NodeCommon from "./NodeCommon";
 
 function UnaryNode(props: NodeProps) {
   const session = useContext(SessionProivder);
@@ -42,8 +44,12 @@ function UnaryNode(props: NodeProps) {
           background: "#555",
         }}
       />
-      {props.data?.label}
-      <ViewButton id={props.id} />
+      <NodeCommon
+        id={props.id}
+        label={props.data?.label}
+        renderEmpty={!block || !block.render()}
+      />
+
       {block && block.render()}
     </div>
   );
