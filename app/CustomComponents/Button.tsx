@@ -1,5 +1,6 @@
 import { twMerge } from "tailwind-merge";
-import Chart from "../Chart";
+import Chart from "../SimpleChart";
+import SimpleChart from "../SimpleChart";
 
 export default function Button({
   src,
@@ -68,11 +69,13 @@ export function ShadowGraph({
   xData,
   yData,
   label,
+  maxPoints,
   override,
 }: {
   xData: number[];
   yData: number[];
   label: string;
+  maxPoints?: number;
   override?: string;
 }) {
   return (
@@ -82,7 +85,7 @@ export function ShadowGraph({
           override || ""
       )}
     >
-      <Chart x={xData} y={yData} />
+      <SimpleChart x={xData} y={yData} maxPoints={maxPoints} />
       <div className="w-32 text-center text-black text-xs font-normal font-['Inter']">
         {label}
       </div>

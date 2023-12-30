@@ -1,5 +1,5 @@
 import { ActualBlocks } from "./Blocks/ActualBlocks";
-import Chart from "./Chart";
+import Chart from "./SimpleChart";
 import { ShadowGraph } from "./CustomComponents/Button";
 import TensorViewer from "./CustomComponents/TensorViewer";
 import { BlockType, Blocks } from "./model";
@@ -39,6 +39,7 @@ export default function RightBar2() {
         xData={lossData.x}
         yData={lossData.y}
         label={"Training Loss"}
+        maxPoints={100}
       />
 
       {/* <p className="text-center">Loss on Training set {2}</p>

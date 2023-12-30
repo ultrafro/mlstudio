@@ -4,7 +4,7 @@ import { SupervisedDataShape } from "../model";
 import mnist from "mnist";
 import mnistSampler from "../MNISTSampler";
 import { Button } from "@mantine/core";
-import Chart from "../Chart";
+import Chart from "../SimpleChart";
 
 export default function DataPreview({ data }: { data: SupervisedDataShape }) {
   const [src, setSrc] = useState<"train" | "val" | "test">("train");

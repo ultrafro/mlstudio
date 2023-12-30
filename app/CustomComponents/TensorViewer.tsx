@@ -4,7 +4,7 @@ import { SessionProivder } from "../Providers";
 import { MultiSelect, Select, Switch } from "@mantine/core";
 import { ActualBlocks } from "../Blocks/ActualBlocks";
 
-import Chart from "../Chart";
+import Chart from "../SimpleChart";
 import { Tensor, squeeze } from "@tensorflow/tfjs";
 
 const GraphTypes = ["histogram", "line", "image"];

@@ -27,15 +27,43 @@ interface ChartProps {
   y?: number[];
 }
 
-const SimpleChart: React.FC<ChartProps> = ({
+export default function SimpleChart({
   x,
   y,
+  maxPoints,
 }: {
   x?: number[];
   y?: number[];
-}) => {
-  const realY = y ?? [];
-  const realX = x ?? realY.map((_, i) => i);
+  maxPoints?: number;
+}) {
+  let realY = y ?? [];
+  let realX = x ?? realY.map((_, i) => i);
+
+  if (typeof maxPoints == "number") {
+    //reduce realX and realY to max points
+    const step = Math.ceil(realX.length / (maxPoints ?? 1));
+    const newX: number[] = [];
+    const newY: number[] = [];
+    for (let i = 0; i < realX.length; i += step) {
+      //average all y points between i and last step
+      let sum = 0;
+      let count = 0;
+      for (let j = i; j < i + step && j < realX.length; j++) {
+        sum += realY[j];
+        count++;
+      }
+      const avg = sum / count;
+
+      newX.push(realX[i]);
+      newY.push(avg);
+    }
+
+    realX = newX;
+    realY = newY;
+  }
+
+  // const realY = y ?? [];
+  // const realX = x ?? realY.map((_, i) => i);
 
   const data = {
     labels: realX,
@@ -75,7 +103,16 @@ const SimpleChart: React.FC<ChartProps> = ({
       },
       // maintainAspectRatio: false,
     },
+    animation: {
+      duration: 250,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
   };
+  console.log("render simple chart");
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -87,6 +124,4 @@ const SimpleChart: React.FC<ChartProps> = ({
       />
     </div>
   );
-};
-
-export default SimpleChart;
+}
