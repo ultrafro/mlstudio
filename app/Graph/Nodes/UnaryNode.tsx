@@ -6,22 +6,13 @@ import { ActualBlocks } from "../../Blocks/ActualBlocks";
 import ViewButton from "../ViewButton";
 import Logo from "../Logo";
 import NodeCommon from "./NodeCommon";
+import { useNodeStyle } from "@/app/utils";
 
 function UnaryNode(props: NodeProps) {
   const session = useContext(SessionProivder);
   const block = ActualBlocks[props.id];
 
-  const baseStyle = {
-    padding: 10,
-    background: "#fff",
-    border:
-      session.session.selectedBlockId == props.id
-        ? "1px solid #0dd"
-        : "1px solid #ddd",
-    width: NODE_WIDTH,
-    height: "200px",
-  };
-
+  const baseStyle = useNodeStyle(props.id);
   return (
     <div style={baseStyle}>
       <Handle

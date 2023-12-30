@@ -10,7 +10,8 @@ import {
   trainBlocks,
 } from "./Blocks/ActualBlocks";
 import { nanoid } from "nanoid";
-import { BlockType } from "./model";
+import { BlockType, Blocks } from "./model";
+import { NODE_WIDTH } from "./Graph/GraphNodeConstants";
 
 export enum Mode {
   Train = "Train",
@@ -243,4 +244,24 @@ function recordLoss() {
       }
     }
   }
+}
+
+export function useNodeStyle(id: string) {
+  const session = useContext(SessionProivder);
+
+  const blockInfo = session.session.network.blocks[id];
+  const blockDefinition = Blocks[blockInfo?.type ?? ""];
+
+  const baseStyle = {
+    padding: 10,
+    background: blockDefinition?.notDeletable ? "#2196f3" : "#fff",
+    border:
+      session.session.selectedBlockId == id
+        ? "1px solid #0dd"
+        : "1px solid #ddd",
+    width: NODE_WIDTH,
+    height: "200px",
+  };
+
+  return baseStyle;
 }
