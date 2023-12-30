@@ -9,6 +9,7 @@ import { mainModule } from "process";
 export class LinearBlock extends BlockClass {
   type = BlockType.LINEAR;
 
+  model: tf.Sequential | null = null;
   denseLayer: any | null = null;
   units: number = 0;
 
@@ -39,19 +40,16 @@ export class LinearBlock extends BlockClass {
       trainable: true,
     };
 
-    const model = tf.sequential();
+    this.model?.dispose();
+    // this.denseLayer?.dispose();
+
+    this.model = tf.sequential();
 
     // Create the dense layer
     this.denseLayer = layers.dense(config as any);
-    model.add(this.denseLayer);
 
-    // // console.log("initialized dense layer");
-    // console.log(this.denseLayer.getWeights());
-
-    // const th = tf.layers.dense({ units: 1, inputShape: [1] });
-    //model.add(th);
-
-    // console.log("fake dense layer weights: ", th.getWeights());
+    //for some reason variables only populate when added to a model :(
+    this.model.add(this.denseLayer);
   };
 
   forward = (inputs: Tensor[]): Tensor => {

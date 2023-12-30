@@ -20,9 +20,9 @@ export default function LinearBlockEditor({ id }: { id: string }) {
   return (
     <FlexColCenter style={{ width: "85%" }}>
       {/* a number input for picking input size */}
-      <FlexRow style={{ justifyContent: "space-between", width: "100%" }}>
+      <FlexColCenter style={{ width: "100%" }}>
         <div>Input Size </div>
-        <div style={{ width: "50px", height: "50px" }}>
+        <div style={{ width: "75px", height: "50px" }}>
           <NumberInput
             key={"dimensionality"}
             size={"20px"}
@@ -53,12 +53,12 @@ export default function LinearBlockEditor({ id }: { id: string }) {
             }}
           />
         </div>
-      </FlexRow>
+      </FlexColCenter>
 
       {/* a number input for picking output size */}
-      <FlexRow style={{ justifyContent: "space-between", width: "100%" }}>
+      <FlexColCenter style={{ width: "100%" }}>
         <div>Output Size </div>
-        <div style={{ width: "50px", height: "50px" }}>
+        <div style={{ width: "75px", height: "50px" }}>
           <NumberInput
             key={"dimensionality"}
             size={"20px"}
@@ -89,7 +89,7 @@ export default function LinearBlockEditor({ id }: { id: string }) {
             }}
           />
         </div>
-      </FlexRow>
+      </FlexColCenter>
     </FlexColCenter>
   );
 }

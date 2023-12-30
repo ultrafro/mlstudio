@@ -13,7 +13,6 @@ export class VariableBlock extends BlockClass {
     super(id, false);
     this.variable.dispose();
 
-    console.log("SETTING UP VARIABLE: " + id);
     this.variable = tf.variable(tf.tensor1d([Math.random()]), true, id);
   }
 

@@ -11,7 +11,7 @@ export default function Logo({ id }: { id: string }) {
   console.log("going to render logo for", blockDefinition.icon);
 
   return (
-    <div className="bg-white rounded-sm w-[50px] h-[50px]">
+    <div className="bg-white rounded-sm w-[50px] h-[50px] p-2">
       <div
         className={"mb-2 "}
         style={{
