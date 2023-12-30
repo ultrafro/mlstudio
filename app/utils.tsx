@@ -24,12 +24,8 @@ export const useMode = () => {
 
 export function useInitializeBlocks() {
   const session = useContext(SessionProivder);
-  const [initialized, setInitialized] = useState<boolean>(false);
-  useEffect(() => {
-    if (session.session.network && !initialized) {
-      setInitialized(true);
-    }
 
+  useEffect(() => {
     if (session.session.network) {
       initializeBlocks(session.session.network);
     }
@@ -41,7 +37,11 @@ export function useInitializeBlocks() {
         actualBlock.updateParams(block.params);
       }
     }
-  }, [initialized, session.session]);
+
+    if (session.session.network && !session.session.initialized) {
+      session.setSession({ ...session.session, initialized: true });
+    }
+  }, [session]);
 }
 
 export function areParamsTheSame(
@@ -216,6 +216,22 @@ export function useTrainContinuously() {
   }, [session]);
 
   return { startTrainingContinuously, stopTrainingContinuously };
+}
+
+export function useResetNonReactStuff() {
+  const session = useContext(SessionProivder);
+
+  const resetEverything = useCallback(() => {
+    loss.length = 0;
+
+    //loop through actual blocks and release each one
+    for (const block of Object.values(ActualBlocks)) {
+      block.destroy();
+      delete ActualBlocks[block.id];
+    }
+  }, []);
+
+  return resetEverything;
 }
 
 function recordLoss() {

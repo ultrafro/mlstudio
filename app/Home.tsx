@@ -20,11 +20,13 @@ import TopBar2 from "./TopBar2";
 import LeftBar2 from "./LeftBar2";
 import RightBar2 from "./RightBar2";
 import TrainingModal from "./CustomComponents/TrainingModal";
+import FileModal from "./CustomComponents/FileModal";
 
 export default function MLStudio() {
   const { mode, setMode } = useMode();
   const [dataOpen, setDataOpen] = useState<boolean>(false);
   const [trainingModalOpen, setTrainingModalOpen] = useState<boolean>(false);
+  const [fileModalOpen, setFileModalOpen] = useState<boolean>(false);
   const [tutorialModalOpen, setTutorialModalOpen] = useState<boolean>(false);
 
   const [session, setSession] = useState<StudioSession>({ ...DEFAULT_SESSION });
@@ -49,6 +51,9 @@ export default function MLStudio() {
               }}
               openTrainingModal={() => {
                 setTrainingModalOpen(true);
+              }}
+              openFile={() => {
+                setFileModalOpen(true);
               }}
             />
             <div className="flex flex-row items-center justify-center w-full h-full  gap-2.5">
@@ -75,6 +80,13 @@ export default function MLStudio() {
           <TrainingModal
             onClose={() => {
               setTrainingModalOpen(false);
+            }}
+          />
+        )}
+        {fileModalOpen && (
+          <FileModal
+            onClose={() => {
+              setFileModalOpen(false);
             }}
           />
         )}

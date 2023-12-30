@@ -8,9 +8,11 @@ import RightBar2 from "./RightBar2";
 export default function TopBar2({
   openData,
   openTrainingModal,
+  openFile,
 }: {
   openData: () => void;
   openTrainingModal: () => void;
+  openFile: () => void;
 }) {
   const session = useContext(SessionProivder);
 
@@ -37,6 +39,13 @@ export default function TopBar2({
               learning rate
             </p>
           </div> */}
+          <Button
+            src={"/icons/file.png"}
+            label="Files"
+            imgSize={32}
+            override="w-24 h-[75px]"
+            onClick={openFile}
+          />
           <Button
             src={"/icons/settings.png"}
             label="training settings"

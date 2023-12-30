@@ -96,7 +96,40 @@ export class BlockClass {
     this.weightGrads = grads;
   }
 
-  destroy() {}
+  destroy() {
+    //release all the tensors
+    if (this.internalTensor) {
+      this.internalTensor.dispose();
+    }
+
+    if (this.value) {
+      this.value.dispose();
+    }
+
+    if (this.grads) {
+      this.grads.dispose();
+    }
+
+    if (this.weightGrads) {
+      for (const grad of this.weightGrads) {
+        grad.dispose();
+      }
+    }
+
+    for (const key of Object.keys(this.viewables)) {
+      this.viewables[key].dispose();
+    }
+
+    if (this.weightGrads) {
+      for (const grad of this.weightGrads) {
+        grad.dispose();
+      }
+    }
+
+    this.viewables = {};
+
+    this.internalTensor = null;
+  }
 
   render: () => ReactElement | null = () => {
     return null;

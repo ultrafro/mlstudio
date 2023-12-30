@@ -74,4 +74,9 @@ export class VariableBlock extends BlockClass {
   override render = () => {
     return <VariableBlockEditor id={this.id} />;
   };
+
+  override destroy = () => {
+    super.destroy();
+    this.variable.dispose();
+  };
 }

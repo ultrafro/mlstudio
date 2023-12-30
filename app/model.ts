@@ -215,6 +215,7 @@ export type StudioSession = {
   blocksChanged?: Record<string, boolean>;
   selectedBlockId?: string;
   trainingSettings: TrainingSettings;
+  initialized: boolean;
 };
 
 export type TrainingSettings = {
@@ -223,6 +224,7 @@ export type TrainingSettings = {
 };
 
 export const DEFAULT_SESSION: StudioSession = {
+  initialized: false,
   // network: { ...BASIC_WORFKLOW_GRAPH } as any,
   network: { ...basicLinearGraph } as any,
 
