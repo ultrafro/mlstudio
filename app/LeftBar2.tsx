@@ -11,10 +11,10 @@ export default function LeftBar2() {
   const createBlock = useCreateBlock();
 
   return (
-    <div className="flex items-center justify-center pointer-events-none">
-      <div className="flex flex-col items-center bg-white p-4 shadow-lg rounded-md pointer-events-auto">
+    <div className="flex items-center justify-center pointer-events-none absolute bottom-[50px] shadow-xl ">
+      <div className="flex flex-col items-center bg-white p-4 shadow-lg rounded-md pointer-events-auto border  border-gray-100 p-4 rounded overflow-hidden">
         <p className="text-center">Blocks</p>
-        <div className="flex flex-row flex-wrap overflow-auto w-[200px] h-[600px]">
+        <div className="flex flex-row flex-wrap overflow-auto w-[800px] h-[150px]">
           {Object.keys(Blocks).map((block) => {
             const blockDefinition = Blocks[block as BlockType];
             if (blockDefinition.notDeletable) {

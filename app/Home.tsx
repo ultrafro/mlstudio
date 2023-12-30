@@ -57,9 +57,6 @@ export default function MLStudio() {
               }}
             />
             <div className="flex flex-row items-center justify-center w-full h-full  gap-2.5">
-              {/* Left Bar */}
-              <LeftBar2 />
-
               {/* Graph */}
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <ReactFlowProvider>
@@ -67,6 +64,9 @@ export default function MLStudio() {
                 </ReactFlowProvider>
               </div>
             </div>
+
+            {/* Left Bar */}
+            <LeftBar2 />
           </div>
         </div>
         {dataOpen && (

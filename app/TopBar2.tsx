@@ -41,7 +41,7 @@ export default function TopBar2({
           </div> */}
           <Button
             src={"/icons/file.png"}
-            label="Files"
+            label="Templates"
             imgSize={32}
             override="w-24 h-[75px]"
             onClick={openFile}
