@@ -21,13 +21,18 @@ import LeftBar2 from "./LeftBar2";
 import RightBar2 from "./RightBar2";
 import TrainingModal from "./CustomComponents/TrainingModal";
 import FileModal from "./CustomComponents/FileModal";
+import TutorialModal from "./CustomComponents/TutorialModal";
 
 export default function MLStudio() {
+  const hasSeenTutorial = localStorage.getItem("hasSeenTutorial");
+
   const { mode, setMode } = useMode();
   const [dataOpen, setDataOpen] = useState<boolean>(false);
   const [trainingModalOpen, setTrainingModalOpen] = useState<boolean>(false);
   const [fileModalOpen, setFileModalOpen] = useState<boolean>(false);
-  const [tutorialModalOpen, setTutorialModalOpen] = useState<boolean>(false);
+  const [tutorialModalOpen, setTutorialModalOpen] = useState<boolean>(
+    hasSeenTutorial ? false : true
+  );
 
   const [session, setSession] = useState<StudioSession>({ ...DEFAULT_SESSION });
   const sessionProviderValue = useMemo(() => {
@@ -87,6 +92,13 @@ export default function MLStudio() {
           <FileModal
             onClose={() => {
               setFileModalOpen(false);
+            }}
+          />
+        )}
+        {tutorialModalOpen && (
+          <TutorialModal
+            onClose={() => {
+              setTutorialModalOpen(false);
             }}
           />
         )}
