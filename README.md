@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a drag and drop playground for learning key concepts from ML
 
-## Getting Started
+live: https://mlstudio.vercel.app/
 
-First, run the development server:
+## Features:
+You can train a model by clicking train-1-step or train continuously
+![running2](https://github.com/ultrafro/mlstudio/assets/3029964/f129125b-56b0-4c94-8930-7895fedffd5d)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+You can set up and design a model by dragging and dropping blocks
+![placement](https://github.com/ultrafro/mlstudio/assets/3029964/a4f51bd9-b5c1-41e5-9e27-16c14668c138)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Some blocks can be customized, you can change their values / dimensions. You'll get an error if it's the wrong size
+![changingValue](https://github.com/ultrafro/mlstudio/assets/3029964/b2b3cbeb-3adb-4117-9a70-479fae3c8551)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can click on the eye-icon to inspect the values and gradients of a block
+![inspect](https://github.com/ultrafro/mlstudio/assets/3029964/d9dd7647-105b-47cc-99ca-011ff02943fa)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## TODO:
+This is very much work in progress. Major areas of improvement:
+- more blocks (CNN's)
+- more custom data definitions / importing
+- batch training
+- saving models
+- inspection of multiple weights / gradients (some blocks can have more than 1 weight)
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
