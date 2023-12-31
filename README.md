@@ -1,6 +1,6 @@
 This is a drag and drop playground for learning key concepts from ML
 
-live: 
+live: https://mlstudio.vercel.app/
 
 ## Features:
 You can train a model by clicking train-1-step or train continuously
