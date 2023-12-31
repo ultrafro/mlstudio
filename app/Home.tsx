@@ -109,6 +109,14 @@ export default function MLStudio() {
             }}
           />
         )}
+
+        {/* a link with the github icon on the top right */}
+        <a href="https://github.com/ultrafro/mlstudio">
+          <div className="absolute top-0 right-0 z-10 flex flex-row items-center justify-center gap-2.5 p-4rounded-lg shadow-sm m-4">
+            <Image src="/icons/gh.png" width={32} height={32} alt="github" />
+            {/* <p className="text-center text-white">github</p> */}
+          </div>
+        </a>
       </MantineProvider>
     </SessionProivder.Provider>
   );
