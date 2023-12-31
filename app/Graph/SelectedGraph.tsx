@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { FlexCol, FlexRow } from "../Flex";
+import { FlexCol, FlexColCenter, FlexRow } from "../Flex";
 import { SessionProivder } from "../Providers";
 import { MultiSelect, Select, Switch } from "@mantine/core";
 import { ActualBlocks } from "../Blocks/ActualBlocks";
 
 import Chart from "../SimpleChart";
 import { Tensor, squeeze } from "@tensorflow/tfjs";
+import TensorViewer from "../CustomComponents/TensorViewer";
 
 const GraphTypes = ["histogram", "line", "image"];
 type GraphType = (typeof GraphTypes)[number];
@@ -38,8 +39,9 @@ export default function SelectedGraph() {
   }
 
   return (
-    <FlexCol
+    <FlexColCenter
       style={{
+        justifyContent: "space-between",
         width: "350px",
         height: "350px",
         position: "absolute",
@@ -63,43 +65,12 @@ export default function SelectedGraph() {
         />
       </FlexRow>
 
+      <TensorViewer tensor={data} sizePX={300} />
+
       {/* Dimension */}
-      <FlexRow style={{ justifyContent: "center" }}>
+      {/* <FlexRow style={{ justifyContent: "center" }}>
         <div>Dimension {data?.shape?.join("x")}</div>
-      </FlexRow>
-
-      {/* Graph */}
-      <FlexRow
-        style={{
-          width: "100%",
-          height: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        {graphType === "image" && data && <GraphImage data={data} />}
-        {graphType === "line" && <GraphPlot data={data} />}
-        {graphType === "histogram" && <GraphHistogram data={data} />}
-      </FlexRow>
-
-      {/* Graph type select */}
-      <FlexRow style={{ width: "100%", justifyContent: "center" }}>
-        <Select
-          allowDeselect={false}
-          data={GraphTypes}
-          value={graphType}
-          onChange={(newVal) => {
-            setGraphType(newVal || "image");
-          }}
-        />
-      </FlexRow>
-
-      {/* Mean and Variance Text */}
-      <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
-        <div>Mean: {mean.toFixed(2)}</div>
-        <div>Variance: {variance.toFixed(2)}</div>
-        <div>total size: {dataAsNumberArray.length}</div>
-      </FlexRow>
+      </FlexRow> */}
 
       {/* a close button on the top left */}
       <div
@@ -120,7 +91,7 @@ export default function SelectedGraph() {
           <img src="https://img.icons8.com/material-outlined/24/000000/close-window.png" />
         </button>
       </div>
-    </FlexCol>
+    </FlexColCenter>
   );
 }
 

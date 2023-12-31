@@ -6,6 +6,7 @@ import { ActualBlocks } from "../Blocks/ActualBlocks";
 
 import Chart from "../SimpleChart";
 import { Tensor, squeeze } from "@tensorflow/tfjs";
+import SimpleChart from "../SimpleChart";
 
 const GraphTypes = ["histogram", "line", "image"];
 type GraphType = (typeof GraphTypes)[number];
@@ -56,9 +57,12 @@ export default function TensorViewer({
         width: sizePX ? sizePX + "px" : "350px",
         height: sizePX ? sizePX + "px" : "350px",
 
-        border: "2px solid black",
-        borderRadius: "10px",
+        // border: "2px solid black",
+        // borderRadius: "10px",
         backgroundColor: "white",
+        position: "relative",
+        justifyContent: "space-around",
+        alignItems: "center",
       }}
     >
       {/* Dimension */}
@@ -74,8 +78,8 @@ export default function TensorViewer({
       {/* Graph */}
       <FlexRow
         style={{
-          width: "100%",
-          height: "100%",
+          width: minimal ? "100%" : "50%",
+          height: minimal ? "100%" : "50%",
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -101,10 +105,16 @@ export default function TensorViewer({
 
       {/* Mean and Variance Text */}
       {!minimal && (
-        <FlexRow style={{ width: "100%", justifyContent: "space-around" }}>
-          <div>Mean: {mean.toFixed(2)}</div>
-          <div>Variance: {variance.toFixed(2)}</div>
-          <div>total size: {dataAsNumberArray.length}</div>
+        <FlexRow
+          style={{
+            width: "100%",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          <p className="text-center">Mean: {mean.toFixed(2)}</p>
+          <p className="text-center">Variance: {variance.toFixed(2)}</p>
+          <p className="text-center">total size: {dataAsNumberArray.length}</p>
         </FlexRow>
       )}
     </FlexCol>
@@ -169,7 +179,7 @@ function GraphImage({ data }: { data: Tensor }) {
 
     for (let i = 0; i < dataAsNumberArray.length; i++) {
       for (let j = 0; j < 3; j++) {
-        const denominator = Math.max((max ?? 0) - (min ?? 0), 1);
+        const denominator = (max ?? 0) - (min ?? 0) ?? 1;
         imageData.data[4 * i + j] =
           ((dataAsNumberArray[i] - (min ?? 0)) / denominator) * 255;
       }
@@ -216,7 +226,7 @@ function GraphPlot({ data }: { data: Tensor | null }) {
         height: "100%",
       }}
     >
-      <Chart y={dataAsNumberArray as number[]} />
+      <SimpleChart y={dataAsNumberArray as number[]} />
     </div>
   );
 }
@@ -248,11 +258,11 @@ function GraphHistogram({ data }: { data: Tensor | null }) {
   return (
     <div
       style={{
-        width: "200px",
-        height: "200px",
+        width: "100%",
+        height: "100%",
       }}
     >
-      <Chart x={x} y={y} />
+      <SimpleChart x={x} y={y} />
     </div>
   );
 }
