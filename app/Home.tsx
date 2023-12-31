@@ -24,23 +24,27 @@ import FileModal from "./CustomComponents/FileModal";
 import TutorialModal from "./CustomComponents/TutorialModal";
 
 export default function MLStudio() {
-  const hasSeenTutorial =
-    typeof window !== "undefined"
-      ? window.localStorage.getItem("hasSeenTutorial")
-      : false;
-
   const { mode, setMode } = useMode();
   const [dataOpen, setDataOpen] = useState<boolean>(false);
   const [trainingModalOpen, setTrainingModalOpen] = useState<boolean>(false);
   const [fileModalOpen, setFileModalOpen] = useState<boolean>(false);
-  const [tutorialModalOpen, setTutorialModalOpen] = useState<boolean>(
-    hasSeenTutorial ? false : true
-  );
+  const [tutorialModalOpen, setTutorialModalOpen] = useState<boolean>(false);
 
   const [session, setSession] = useState<StudioSession>({ ...DEFAULT_SESSION });
   const sessionProviderValue = useMemo(() => {
     return { session, setSession };
   }, [session, setSession]);
+
+  useEffect(() => {
+    const hasSeenTutorial =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("hasSeenTutorial")
+        : false;
+
+    if (!hasSeenTutorial) {
+      setTutorialModalOpen(true);
+    }
+  }, []);
 
   useEffect(() => {
     actualData.setSupervisedDataShape(session.supervisedDataShape);
