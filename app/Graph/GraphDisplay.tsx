@@ -161,6 +161,10 @@ export default function GraphDisplay() {
           addChange = false;
         } else {
           delete newNetwork.blocks[node.id];
+
+          //destroy block in actual blocks
+          ActualBlocks[node.id]?.destroy();
+          delete ActualBlocks[node.id];
         }
       }
 
