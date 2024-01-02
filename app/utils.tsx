@@ -240,7 +240,11 @@ function recordLoss() {
     if (block.type == BlockType.FINAL_LOSS) {
       const lossTensor = block.getValue();
       if (lossTensor) {
-        loss.push(lossTensor.dataSync()[0]);
+        try {
+          loss.push(lossTensor.dataSync()[0]);
+        } catch (e) {
+          console.log("error recording loss", e);
+        }
       }
     }
   }

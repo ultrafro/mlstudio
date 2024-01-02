@@ -64,8 +64,6 @@ export default function GraphDisplay() {
 
   const reactFlow = useReactFlow();
   useEffect(() => {
-    console.log("current zoom: ", reactFlow.getZoom());
-    console.log("current position: ", reactFlow.getViewport());
     reactFlow.zoomTo(0.3);
   }, [reactFlow]);
 
@@ -80,10 +78,28 @@ export default function GraphDisplay() {
       const source = ActualBlocks[edge.source];
       const target = ActualBlocks[edge.target];
       if (source && target) {
+        let sourceAsNumberArray: Float32Array | Int32Array | Uint8Array =
+          new Float32Array();
+        try {
+          sourceAsNumberArray =
+            source?.getValue()?.dataSync() ?? new Float32Array();
+        } catch (e) {
+          console.log(e);
+        }
+
+        let targetAsNumberArray: Float32Array | Int32Array | Uint8Array =
+          new Float32Array();
+        try {
+          targetAsNumberArray =
+            target?.getValue()?.dataSync() ?? new Float32Array();
+        } catch (e) {
+          console.log(e);
+        }
+
         edge.label =
-          source?.getValue()?.dataSync()?.toString().substring(0, 4) +
+          sourceAsNumberArray?.toString().substring(0, 4) +
           " | " +
-          target?.getGrads()?.dataSync().toString().substring(0, 4);
+          targetAsNumberArray?.toString().substring(0, 4);
       }
     }
     return newEdges;

@@ -25,8 +25,13 @@ export default function SelectedGraph() {
 
   const data = showGradients ? block.getGrads() : block.getValue();
 
-  const dataAsNumberArray = data?.dataSync() ?? [];
-
+  let dataAsNumberArray: Float32Array | Int32Array | Uint8Array =
+    new Float32Array();
+  try {
+    dataAsNumberArray = data?.dataSync() ?? new Float32Array();
+  } catch (e) {
+    console.log(e);
+  }
   let mean = 0;
   let variance = 0;
   for (let i = 0; i < dataAsNumberArray.length; i++) {
@@ -136,7 +141,13 @@ function GraphImage({ data }: { data: Tensor }) {
         : squeezedTensor;
 
     //convert to a 2d array
-    const dataAsNumberArray = firstSlice?.dataSync() ?? [];
+    let dataAsNumberArray: Float32Array | Int32Array | Uint8Array =
+      new Float32Array();
+    try {
+      dataAsNumberArray = data?.dataSync() ?? new Float32Array();
+    } catch (e) {
+      console.log(e);
+    }
 
     let max: number | null = null;
     let min: number | null = null;
@@ -191,7 +202,13 @@ function GraphImage({ data }: { data: Tensor }) {
 }
 
 function GraphPlot({ data }: { data: Tensor | null }) {
-  const dataAsNumberArray = data?.dataSync() ?? [];
+  let dataAsNumberArray: Float32Array | Int32Array | Uint8Array =
+    new Float32Array();
+  try {
+    dataAsNumberArray = data?.dataSync() ?? new Float32Array();
+  } catch (e) {
+    console.log(e);
+  }
 
   return (
     <div
@@ -200,14 +217,20 @@ function GraphPlot({ data }: { data: Tensor | null }) {
         height: "200px",
       }}
     >
-      <Chart y={dataAsNumberArray as number[]} />
+      <Chart y={dataAsNumberArray as any as number[]} />
     </div>
   );
 }
 
 function GraphHistogram({ data }: { data: Tensor | null }) {
-  const dataAsNumberArray = data?.dataSync() ?? [];
-  const numbers = dataAsNumberArray as number[];
+  let dataAsNumberArray: Float32Array | Int32Array | Uint8Array =
+    new Float32Array();
+  try {
+    dataAsNumberArray = data?.dataSync() ?? new Float32Array();
+  } catch (e) {
+    console.log(e);
+  }
+  const numbers = dataAsNumberArray as any as number[];
 
   const bins = 10;
   const min = Math.min(...numbers);
